@@ -20,6 +20,11 @@ public class DashboardActivity extends AppCompatActivity {
     ActionBar actionBar;
     BottomNavigationView navigationView;
 
+    HomeFragment homeFragment = new HomeFragment();
+    NewPostFragment postFragment = new NewPostFragment();
+    ProfileFragment profilefragment = new ProfileFragment();
+    MapsFragment mapsFragment = new MapsFragment();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,20 +59,29 @@ public class DashboardActivity extends AppCompatActivity {
                     fragmentTransaction.commit();
                     return true;
 
-                case R.id.nav_profile:
-                    actionBar.setTitle("Profile");
-                    ProfileFragment fragment1 = new ProfileFragment();
-                    FragmentTransaction fragmentTransaction1 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction1.replace(R.id.content, fragment1);
-                    fragmentTransaction1.commit();
-                    return true;
 
                 case R.id.nav_post:
-                    actionBar.setTitle("Users");
+                    actionBar.setTitle("Post");
                     NewPostFragment fragment2 = new NewPostFragment();
                     FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.content, fragment2, "");
                     fragmentTransaction2.commit();
+                    return true;
+
+                case R.id.nav_profile:
+                    actionBar.setTitle("Profile");
+                    ProfileFragment fragment1 = new ProfileFragment();
+                    FragmentTransaction fragmentTransaction1 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction1.replace(R.id.content, fragment1, "");
+                    fragmentTransaction1.commit();
+                    return true;
+
+                case R.id.Maps:
+                    actionBar.setTitle("Maps");
+                    MapsFragment Maps = new MapsFragment();
+                    FragmentTransaction MapsFragment = getSupportFragmentManager().beginTransaction();
+                    MapsFragment.replace(R.id.content, Maps, "");
+                    MapsFragment.commit();
                     return true;
             }
             return false;
