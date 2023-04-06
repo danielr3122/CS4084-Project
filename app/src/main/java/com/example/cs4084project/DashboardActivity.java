@@ -1,6 +1,5 @@
 package com.example.cs4084project;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -57,6 +56,14 @@ public class DashboardActivity extends AppCompatActivity {
                     fragmentTransaction.commit();
                     return true;
 
+                case R.id.notifications:
+                    actionBar.setTitle("Profile");
+                    NotificationsFragment fragment4= new NotificationsFragment();
+                    FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction4.replace(R.id.content, fragment4);
+                    fragmentTransaction4.commit();
+                    return true;
+
                 case R.id.nav_profile:
                     actionBar.setTitle("Profile");
                     ProfileFragment fragment1 = new ProfileFragment();
@@ -65,7 +72,7 @@ public class DashboardActivity extends AppCompatActivity {
                     fragmentTransaction1.commit();
                     return true;
 
-                case R.id.nav_post:
+                case R.id.post:
                     actionBar.setTitle("Users");
                     NewPostFragment fragment2 = new NewPostFragment();
                     FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
