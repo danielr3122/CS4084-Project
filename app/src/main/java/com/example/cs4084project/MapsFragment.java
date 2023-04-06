@@ -1,4 +1,4 @@
-package com.example.cs4084project.ui.login;
+package com.example.cs4084project;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

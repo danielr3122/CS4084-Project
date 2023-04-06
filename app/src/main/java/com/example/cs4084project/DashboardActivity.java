@@ -1,5 +1,6 @@
 package com.example.cs4084project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -9,13 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-//import com.google.firebase.auth.FirebaseAuth;
-//import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class DashboardActivity extends AppCompatActivity {
 
-//    private FirebaseAuth firebaseAuth;
-//    FirebaseUser firebaseUser;
+   FirebaseAuth auth;
+   FirebaseUser user;
     String myuid;
     ActionBar actionBar;
     BottomNavigationView navigationView;
@@ -24,9 +25,11 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        auth = FirebaseAuth.getInstance();
         actionBar = getSupportActionBar();
         actionBar.setTitle("Profile Activity");
-//        firebaseAuth = FirebaseAuth.getInstance();
+        //auth = FirebaseAuth.getInstance();
 
         navigationView = findViewById(R.id.navigation);
         navigationView.setOnItemSelectedListener(selectedListener);
@@ -68,6 +71,12 @@ public class DashboardActivity extends AppCompatActivity {
                     FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.content, fragment2, "");
                     fragmentTransaction2.commit();
+                    return true;
+
+                case R.id.logout:
+                    actionBar.setTitle("Logout");
+                   // auth.signOut();
+
                     return true;
             }
             return false;
