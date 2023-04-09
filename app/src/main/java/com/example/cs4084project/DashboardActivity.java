@@ -24,7 +24,7 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
+        // using auth to try create instance of session to use to log someone out, not currently working out
         auth = FirebaseAuth.getInstance();
         actionBar = getSupportActionBar();
         actionBar.setTitle("Profile Activity");
@@ -47,7 +47,7 @@ public class DashboardActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             switch (menuItem.getItemId()) {
-
+// creating the nav bar buttons and linking them to a page when clicked on
                 case R.id.nav_home:
                     actionBar.setTitle("Home");
                     HomeFragment fragment = new HomeFragment();
@@ -79,7 +79,7 @@ public class DashboardActivity extends AppCompatActivity {
                     fragmentTransaction2.replace(R.id.content, fragment2, "");
                     fragmentTransaction2.commit();
                     return true;
-
+// logout button is causing me issues getting the correct call right and grabbing the session and login someone out of there session
                 case R.id.logout:
                     actionBar.setTitle("Logout");
                    // auth.signOut();

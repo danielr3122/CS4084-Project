@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--This is where each button in the nav bar is edited-->
+    <!--changing icon in drawable folder changes icon on nav bar-->
+    <!--changing title changes the actual text that appears on the button-->
     <item
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_home"
