@@ -9,13 +9,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-//import com.google.firebase.auth.FirebaseAuth;
-//import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class DashboardActivity extends AppCompatActivity {
 
-//    private FirebaseAuth firebaseAuth;
-//    FirebaseUser firebaseUser;
+   FirebaseAuth auth;
+   FirebaseUser user;
     String myuid;
     ActionBar actionBar;
     BottomNavigationView navigationView;
@@ -24,9 +24,11 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        // using auth to try create instance of session to use to log someone out, not currently working out
+        auth = FirebaseAuth.getInstance();
         actionBar = getSupportActionBar();
         actionBar.setTitle("Profile Activity");
-//        firebaseAuth = FirebaseAuth.getInstance();
+        //auth = FirebaseAuth.getInstance();
 
         navigationView = findViewById(R.id.navigation);
         navigationView.setOnItemSelectedListener(selectedListener);
@@ -45,13 +47,21 @@ public class DashboardActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             switch (menuItem.getItemId()) {
-
+// creating the nav bar buttons and linking them to a page when clicked on
                 case R.id.nav_home:
                     actionBar.setTitle("Home");
                     HomeFragment fragment = new HomeFragment();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.content, fragment, "");
                     fragmentTransaction.commit();
+                    return true;
+
+                case R.id.notifications:
+                    actionBar.setTitle("Profile");
+                    NotificationsFragment fragment4= new NotificationsFragment();
+                    FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction4.replace(R.id.content, fragment4);
+                    fragmentTransaction4.commit();
                     return true;
 
                 case R.id.nav_profile:
@@ -62,12 +72,18 @@ public class DashboardActivity extends AppCompatActivity {
                     fragmentTransaction1.commit();
                     return true;
 
-                case R.id.nav_post:
+                case R.id.post:
                     actionBar.setTitle("Users");
                     NewPostFragment fragment2 = new NewPostFragment();
                     FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.content, fragment2, "");
                     fragmentTransaction2.commit();
+                    return true;
+// logout button is causing me issues getting the correct call right and grabbing the session and login someone out of there session
+                case R.id.logout:
+                    actionBar.setTitle("Logout");
+                   // auth.signOut();
+
                     return true;
             }
             return false;

@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--This is where each button in the nav bar is edited-->
+    <!--changing icon in drawable folder changes icon on nav bar-->
+    <!--changing title changes the actual text that appears on the button-->
     <item
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_home"
         android:title="Home" />
     <item
-        android:id="@+id/nav_post"
+        android:id="@+id/notifications"
         android:icon="@drawable/ic_post"
-        android:title="Post" />
+        android:title="Notifications" />
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_account"
         android:title="Profile" />
+
+    <item
+        android:id="@+id/post"
+        android:icon="@drawable/ic_post"
+        android:title="Post"/>
+
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/baseline_logout_24"
+        android:title="Logout" />
 
 </menu>
