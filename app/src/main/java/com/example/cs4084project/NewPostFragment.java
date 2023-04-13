@@ -1,19 +1,18 @@
 package com.example.cs4084project;
 
-import android.os.Bundle;
-
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,22 +24,24 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.maps.model.Dash;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.UUID;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,10 +65,14 @@ public class NewPostFragment extends Fragment {
 
     ImageView imageView;
     Uri imageUri;
+    Bitmap imageBitmap;
     Button galleryBtn;
     Button cameraBtn;
 
     TextView captionTxt;
+    String caption;
+
+    Gson gson;
 
     Button uploadBtn;
 
@@ -106,6 +111,8 @@ public class NewPostFragment extends Fragment {
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
 
+        gson = new Gson();
+
         if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA) ==
                 PackageManager.PERMISSION_DENIED
         ) {
@@ -131,6 +138,8 @@ public class NewPostFragment extends Fragment {
         imageView = getView().findViewById(R.id.postImage);
         galleryBtn =  getView().findViewById(R.id.gallery);
         cameraBtn =  getView().findViewById(R.id.camera);
+
+        captionTxt = (TextView) getView().findViewById(R.id.Caption);
 
         uploadBtn =  getView().findViewById(R.id.uploadPost);
 
@@ -174,9 +183,20 @@ public class NewPostFragment extends Fragment {
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result){
-                    if(result.getResultCode() == getActivity().RESULT_OK) {
+                    if(result.getResultCode() == DashboardActivity.RESULT_OK) {
                         imageUri = result.getData().getData();
-                        imageView.setImageURI(imageUri);
+
+                        try {
+                            InputStream inputStream = getActivity().
+                                    getApplicationContext().getContentResolver().openInputStream(imageUri);
+
+                            imageBitmap = BitmapFactory.decodeStream(inputStream);
+
+                            imageView.setImageBitmap(imageBitmap);
+
+                        }catch (FileNotFoundException e){
+
+                        }
                     }
                 }
             });
@@ -186,24 +206,37 @@ public class NewPostFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 110){
-            Bitmap captureImage = (Bitmap) data.getExtras().get("data");
-            imageView.setImageBitmap(captureImage);
-            imageUri = getImageUri(getContext(), captureImage);
+            if (data != null) {
+                imageBitmap = (Bitmap) data.getExtras().get("data");
+                imageView.setImageBitmap(imageBitmap);
+            }
         }
+
     }
 
 
-    private void uploadPicture(){
+    private void uploadPicture() {
 
-        final ProgressDialog pd = new ProgressDialog(getContext());
-        pd.setTitle("Uploading Image...");
+        if (captionTxt.getText() != null) {
+            caption = captionTxt.getText().toString();
+        } else caption = "";
+
+        Post newPost = new Post(imageBitmap, caption);
+        String jsonNewPost = gson.toJson(newPost);
+        byte[] data = jsonNewPost.getBytes();
+
+        final ProgressDialog pd = new ProgressDialog(getActivity());
+        pd.setTitle("Uploading Post...");
         pd.show();
 
         final String randomKey = UUID.randomUUID().toString();
-        StorageReference fileRef = storageReference.child("images/" + randomKey);
+        StorageReference fileRef = storageReference.child("Posts/" + randomKey + ".json");
 
-        fileRef.putFile(imageUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+        UploadTask uploadTask = fileRef.putBytes(data);
+
+
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Toast.makeText(getContext(), "Uploaded Successfully!", Toast.LENGTH_LONG).show();
@@ -227,11 +260,28 @@ public class NewPostFragment extends Fragment {
     };
 
 
-    private Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
 
+
+    /*  To use the method getPostFromJSON()
+
+
+        Post testPost;
+        try {
+            testPost = getPostFromJSON(jsonNewPost);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        */
+    private Post getPostFromJSON(String json) throws JSONException {
+        JSONObject jsonObject = new JSONObject(json);
+
+        String encodedImage = jsonObject.getString("imageStr");
+        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+        Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+        String decodedCaption = jsonObject.getString("caption");
+
+        Post postFromJSON = new Post(decodedBitmap, decodedCaption);
+        return postFromJSON;
+    }
 }
