@@ -15,6 +15,11 @@
     <string name="register">Register</string>
     <string name="click_to_login">Click To Login</string>
     <string name="click_to_register">Click To Register</string>
+
+    <!-- Strings related to profile page -->
+    <string name="profile_username">\@username</string>
+    <string name="profile_followers_label">Followers</string>
+    <string name="profile_following_label">Following</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
