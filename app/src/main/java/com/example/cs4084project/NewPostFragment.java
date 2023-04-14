@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -206,9 +207,10 @@ public class NewPostFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 110){
-            if (data != null) {
-                imageBitmap = (Bitmap) data.getExtras().get("data");
-                imageView.setImageBitmap(imageBitmap);
+            if(resultCode == DashboardActivity.RESULT_OK) {
+                    imageBitmap = (Bitmap) data.getExtras().get("data");
+                    imageView.setImageBitmap(imageBitmap);
+
             }
         }
 
@@ -249,13 +251,6 @@ public class NewPostFragment extends Fragment {
                         Toast.makeText(getContext(), "Failed to Upload!", Toast.LENGTH_LONG).show();
                         pd.dismiss();
                     }
-                })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                        double progressPercent = (100 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                        pd.setMessage("Percentage: " + (int) progressPercent + "%");
-                    }
                 });
     };
 
@@ -284,4 +279,7 @@ public class NewPostFragment extends Fragment {
         Post postFromJSON = new Post(decodedBitmap, decodedCaption);
         return postFromJSON;
     }
+
+
 }
+
