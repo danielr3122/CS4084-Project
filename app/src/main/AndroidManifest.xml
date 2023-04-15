@@ -48,7 +48,7 @@
         <activity
             android:name=".DashboardActivity"
             android:exported="true"
-            android:label="CS4084-Project"></activity>
+            android:label="CS4084-Project" />
     </application>
 
 </manifest>
