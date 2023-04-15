@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,7 +42,14 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        return inflater.inflate(R.layout.fragment_home, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        rvPosts = view.findViewById(R.id.rvPosts);
 
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference().child("Posts");
@@ -74,12 +82,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        rvPosts = view.findViewById(R.id.rvPosts);
         rvPosts.setHasFixedSize(true);
-        rvPosts.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         PostsAdapter postsAdapter = new PostsAdapter(allPosts);
         rvPosts.setAdapter(postsAdapter);
-        return view;
     }
 
     private Post getPostFromJSON(String json) throws JSONException {
