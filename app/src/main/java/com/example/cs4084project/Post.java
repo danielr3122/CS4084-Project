@@ -22,11 +22,9 @@ public class Post{
         this.caption = caption;
     }
 
-
     public String getCaption(){
         return caption;
     }
-
 
     public Bitmap getImage(){
         if(image != null){
@@ -41,7 +39,6 @@ public class Post{
     }
 
     public void setImage(Bitmap image) {
-
         this.image = image;
         this.imageStr = getStringFromBitmap(image);
     }
@@ -56,9 +53,6 @@ public class Post{
         encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
         return encodedImage;
     }
-
-
-
 }
 
 

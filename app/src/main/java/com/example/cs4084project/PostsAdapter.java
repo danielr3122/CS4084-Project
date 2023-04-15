@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
 
@@ -24,9 +24,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         }
     }
 
-    private List<Post> allPosts;
+    private ArrayList<Post> allPosts;
 
-    public PostsAdapter(List<Post> allPosts){
+    public PostsAdapter(ArrayList<Post> allPosts){
         this.allPosts = allPosts;
     }
 
