@@ -19,7 +19,6 @@
 
 
 
- main
         <activity
             android:name=".Register"
             android:exported="false"

@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.firebase.ui.auth.AuthUI;
+//import com.firebase.ui.auth.AuthUI;
 
 public class DashboardActivity extends AppCompatActivity {
 
