@@ -37,7 +37,6 @@ dependencies {
 
 
     implementation 'com.google.code.gson:gson:2.10.1'
- main
     //'com.google.android.material:material:1.2.0'
     implementation 'com.google.android.material:material:1.2.0'
     //'androidx.appcompat:appcompat:1.6.1'
@@ -53,7 +52,9 @@ dependencies {
     // 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     // 'com.google.android.gms:play-services-maps:18.0.2'
-    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
     //implementation platform('com.google.firebase:firebase-bom:31.4.0')
     implementation platform('com.google.firebase:firebase-bom:31.4.0')
     // 'com.google.firebase:firebase-auth'
