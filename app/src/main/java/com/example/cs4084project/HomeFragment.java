@@ -15,17 +15,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
-
-import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,8 +36,6 @@ public class HomeFragment extends Fragment {
     private ArrayList<Post> allPosts = new ArrayList<Post>();
     private int numOfPosts;
     private int currPostNum;
-
-    Gson gson;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,9 +54,7 @@ public class HomeFragment extends Fragment {
         storageReference.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult listResult) {
-                Log.d("Download Success", "Downloaded Files Sucessfully");
                 numOfPosts = listResult.getItems().size();
-                Log.d("Number of Posts", "" + numOfPosts);
                 for(StorageReference item : listResult.getItems()) {
                     item.getBytes(1000000).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
@@ -72,13 +63,10 @@ public class HomeFragment extends Fragment {
                             String postStringJSON = new String(postData);
                             try {
                                 Post currPost = getPostFromJSON(postStringJSON);
-                                Log.d("Post Added", currPost.getCaption());
                                 allPosts.add(currPost);
                                 currPostNum++;
-                                Log.d("New Post", currPostNum + "");
 
                                 if(currPostNum == numOfPosts){
-                                    Log.d("All Posts Read", "Every post has been seen");
                                     rvPosts.setHasFixedSize(true);
                                     rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
                                     PostsAdapter postsAdapter = new PostsAdapter(allPosts);
