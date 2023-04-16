@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
-
+    // initialising variables and Firebase authentication
     TextInputEditText editTextEmail, editTextPassword;
     Button buttonLogin, buttonResetPassword;
     private FirebaseAuth mAuth;
@@ -30,7 +30,8 @@ public class Login extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // Check if user is signed in (non-null) and update UI accordingly. basically checking if a user is logged in if yes go to home page
+        // not login or reg screen, if no ( implied else) then "on start" don't give them the home page and in effect make them login
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
@@ -65,11 +66,12 @@ public class Login extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
+                // progress bar has been hidden as it can fool people into thinking something is loading
+                progressBar.setVisibility(View.GONE);
                 String email, password;
                 email = String.valueOf(editTextEmail.getText());
                 password = String.valueOf(editTextPassword.getText());
-
+            // toast is just what function throws a message to the users screen
                 if(TextUtils.isEmpty(email)){
                     Toast.makeText(Login.this, "Enter Email", Toast.LENGTH_SHORT).show();
                     return;
@@ -90,21 +92,22 @@ public class Login extends AppCompatActivity {
                                     startActivity(intent);
                                     finish();
                                     // Sign in success, update UI with the signed-in user's information
-                                    //Log.d(TAG, "signInWithEmail:success");
+
                                     //FirebaseUser user = mAuth.getCurrentUser();
-                                  //  updateUI(user);
+
                                 } else {
                                     // If sign in fails, display a message to the user.
-                                   // Log.w(TAG, "signInWithEmail:failure", task.getException());
+
                                     Toast.makeText(Login.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
-                                   // updateUI(null);
+
                                 }
                             }
                         });
 
             }
         });
+        //This is for password reset, it works APP has a weird name in emails to avoid junk filters (UL fit)
         buttonResetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,6 +123,7 @@ public class Login extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
+                                    //user gets a message either way to let them know if email sent or not
                                     Toast.makeText(Login.this, "Reset password email sent.", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(Login.this, "Failed to send reset password email.", Toast.LENGTH_SHORT).show();
