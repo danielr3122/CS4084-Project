@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class Register extends AppCompatActivity {
 
-    TextInputEditText editTextEmail, editTextPassword;
+    TextInputEditText editTextEmail, editTextPassword, editName;
     Button buttonReg;
     private FirebaseAuth mAuth;
     ProgressBar progressBar;
@@ -47,6 +47,7 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         mAuth = FirebaseAuth.getInstance();
         editTextEmail = findViewById(R.id.email);
+        //editName = findViewById(R.id.name);
         editTextPassword = findViewById(R.id.password);
         buttonReg = findViewById(R.id.btn_register);
         progressBar = findViewById(R.id.progressBar);

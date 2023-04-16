@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class Login extends AppCompatActivity {
 
     TextInputEditText editTextEmail, editTextPassword;
-    Button buttonLogin;
+    Button buttonLogin, buttonResetPassword;
     private FirebaseAuth mAuth;
     ProgressBar progressBar;
     TextView textview;
@@ -50,6 +50,7 @@ public class Login extends AppCompatActivity {
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
         buttonLogin = findViewById(R.id.btn_login);
+        buttonResetPassword = findViewById(R.id.buttonResetPassword);
         progressBar = findViewById(R.id.progressBar);
         textview = findViewById(R.id.lRegisterNow);
         textview.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +99,30 @@ public class Login extends AppCompatActivity {
                                     Toast.makeText(Login.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
                                    // updateUI(null);
+                                }
+                            }
+                        });
+
+            }
+        });
+        buttonResetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = editTextEmail.getText().toString().trim();
+
+                if (TextUtils.isEmpty(email)) {
+                    editTextEmail.setError("Email is required.");
+                    return;
+                }
+
+                mAuth.sendPasswordResetEmail(email)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(Login.this, "Reset password email sent.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(Login.this, "Failed to send reset password email.", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
