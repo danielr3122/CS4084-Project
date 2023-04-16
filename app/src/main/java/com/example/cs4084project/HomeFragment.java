@@ -1,5 +1,6 @@
 package com.example.cs4084project;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -51,6 +52,12 @@ public class HomeFragment extends Fragment {
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference().child("Posts");
 
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Refreshing Feed");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgress(0);
+        progressDialog.show();
+
         storageReference.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult listResult) {
@@ -65,8 +72,11 @@ public class HomeFragment extends Fragment {
                                 Post currPost = getPostFromJSON(postStringJSON);
                                 allPosts.add(currPost);
                                 currPostNum++;
+                                progressDialog.setProgress((100/numOfPosts) * currPostNum);
 
                                 if(currPostNum == numOfPosts){
+                                    progressDialog.setProgress(100);
+                                    progressDialog.dismiss();
                                     rvPosts.setHasFixedSize(true);
                                     rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
                                     PostsAdapter postsAdapter = new PostsAdapter(allPosts);
