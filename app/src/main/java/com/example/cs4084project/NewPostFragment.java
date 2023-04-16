@@ -244,8 +244,6 @@ public class NewPostFragment extends Fragment {
     private void fetchLastlocation() {
 
         if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
             return;
         }
@@ -349,6 +347,12 @@ public class NewPostFragment extends Fragment {
         Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
         String decodedCaption = jsonObject.getString("caption");
+
+        if(jsonObject.has("longitude") && jsonObject.has("latitude")){
+            double decodedLongitude = jsonObject.getDouble("longitude");
+            double decodedLatitude = jsonObject.getDouble("latitude");
+            return new Post(decodedBitmap, decodedCaption, decodedLongitude, decodedLatitude);
+        }
 
         return new Post(decodedBitmap, decodedCaption);
     }
