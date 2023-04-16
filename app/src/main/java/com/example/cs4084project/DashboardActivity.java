@@ -58,7 +58,7 @@ public class DashboardActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.notifications:
-                    actionBar.setTitle("Profile");
+                    actionBar.setTitle("Notifications");
                     NotificationsFragment fragment4= new NotificationsFragment();
                     FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction4.replace(R.id.content, fragment4);
@@ -82,7 +82,7 @@ public class DashboardActivity extends AppCompatActivity {
                     return true;
 // logout button is causing me issues getting the correct call right and grabbing the session and login someone out of there session
                 case R.id.settings:
-                    actionBar.setTitle("settings");
+                    actionBar.setTitle("Settings");
                     SettingsFragment fragment5 = new SettingsFragment();
                     FragmentTransaction fragmentTransaction5 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction5.replace(R.id.content, fragment5, "");
