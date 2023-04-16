@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,6 +39,8 @@ public class HomeFragment extends Fragment {
     private StorageReference storageReference;
     private byte[] postData;
     private ArrayList<Post> allPosts = new ArrayList<Post>();
+    private int numOfPosts;
+    private int currPostNum;
 
     Gson gson;
 
@@ -58,6 +62,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSuccess(ListResult listResult) {
                 Log.d("Download Success", "Downloaded Files Sucessfully");
+                numOfPosts = listResult.getItems().size();
+                Log.d("Number of Posts", "" + numOfPosts);
                 for(StorageReference item : listResult.getItems()) {
                     item.getBytes(1000000).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
@@ -68,6 +74,16 @@ public class HomeFragment extends Fragment {
                                 Post currPost = getPostFromJSON(postStringJSON);
                                 Log.d("Post Added", currPost.getCaption());
                                 allPosts.add(currPost);
+                                currPostNum++;
+                                Log.d("New Post", currPostNum + "");
+
+                                if(currPostNum == numOfPosts){
+                                    Log.d("All Posts Read", "Every post has been seen");
+                                    rvPosts.setHasFixedSize(true);
+                                    rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+                                    PostsAdapter postsAdapter = new PostsAdapter(allPosts);
+                                    rvPosts.setAdapter(postsAdapter);
+                                }
                             } catch (JSONException e) {
                                 throw new RuntimeException(e);
                             }
@@ -81,11 +97,6 @@ public class HomeFragment extends Fragment {
                 Log.e("Downloading Error", "Failed to download files");
             }
         });
-
-        rvPosts.setHasFixedSize(true);
-        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-        PostsAdapter postsAdapter = new PostsAdapter(allPosts);
-        rvPosts.setAdapter(postsAdapter);
     }
 
     private Post getPostFromJSON(String json) throws JSONException {
