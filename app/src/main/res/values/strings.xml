@@ -31,5 +31,8 @@
     <string name="name">Name</string>
     <string name="confirmpassword">Confirm password</string>
 
+    <!--  Strings related to setting page  -->
+    <string name="setting_notification_label">Notifications</string>
+
 
 </resources>
