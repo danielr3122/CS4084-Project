@@ -3,6 +3,7 @@ package com.example.cs4084project;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.util.Base64;
 
 import org.json.JSONException;
@@ -15,11 +16,21 @@ public class Post{
     //private GoogleMapsThing mapsThing;
     private Bitmap image;
     private String imageStr;
+    private double longitude;
+    private double latitude;
 
     public Post(Bitmap image, String caption){
         this.image = image;
         this.imageStr = getStringFromBitmap(image);
         this.caption = caption;
+    }
+
+    public Post(Bitmap image, String caption, double longitude, double latitude){
+        this.image = image;
+        this.imageStr = getStringFromBitmap(image);
+        this.caption = caption;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
 
@@ -44,6 +55,14 @@ public class Post{
 
         this.image = image;
         this.imageStr = getStringFromBitmap(image);
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
     }
 
     private String getStringFromBitmap(Bitmap bitmapPicture) {
