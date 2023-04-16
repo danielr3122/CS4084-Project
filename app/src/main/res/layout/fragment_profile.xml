@@ -1,16 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="15dp"
+    tools:context=".ProfileFragment">
 
+
+    <ImageView
+        android:id="@+id/profile_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_account" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="15dp" />
 
     <TextView
+        android:id="@+id/profile_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Profile Fragment"
-        android:textSize="25dp"
-        android:layout_centerInParent="true"  />
+        android:layout_centerInParent="true"
+        android:text="@string/profile_username"
+        android:textSize="25dp" />
 
-</RelativeLayout>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="15dp" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Space
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/profile_follower_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="#"
+                android:textAlignment="center"
+                android:textSize="20dp" />
+
+            <Space
+                android:layout_width="110dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/profile_following_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="#"
+                android:textAlignment="center"
+                android:textSize="20dp" />
+
+            <Space
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Space
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/profile_followers_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_followers_label"
+                android:textSize="20dp" />
+
+            <Space
+                android:layout_width="110dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/profile_following_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_following_label"
+                android:textSize="20dp" />
+
+            <Space
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
+        </TableRow>
+
+    </TableLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="15dp" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="?android:attr/listDivider" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </TableLayout>
+
+</LinearLayout>
