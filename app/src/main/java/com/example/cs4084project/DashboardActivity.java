@@ -74,7 +74,7 @@ public class DashboardActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.post:
-                    actionBar.setTitle("Users");
+                    actionBar.setTitle("Create Post");
                     NewPostFragment fragment2 = new NewPostFragment();
                     FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.content, fragment2, "");
