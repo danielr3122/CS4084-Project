@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 public class Register extends AppCompatActivity {
 // initialising variables and Firebase authentication
-    TextInputEditText editTextEmail, editTextPassword, editName;
+    TextInputEditText editTextEmail, editTextPassword, editTextConfirmPassword;
     Button buttonReg;
     private FirebaseAuth mAuth;
     ProgressBar progressBar;
@@ -54,6 +54,7 @@ public class Register extends AppCompatActivity {
 
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
+        editTextConfirmPassword = findViewById(R.id.confirmpassword);
         buttonReg = findViewById(R.id.btn_register);
         progressBar = findViewById(R.id.progressBar);
         textview = findViewById(R.id.loginNow);
@@ -74,6 +75,7 @@ public class Register extends AppCompatActivity {
                 String name, email, password;
                 email = String.valueOf(editTextEmail.getText());
                 password = String.valueOf(editTextPassword.getText());
+                String confirmPassword = String.valueOf(editTextConfirmPassword.getText());
 
                 if(TextUtils.isEmpty(email)){
                     Toast.makeText(Register.this, "Enter Email", Toast.LENGTH_SHORT).show();
@@ -81,6 +83,10 @@ public class Register extends AppCompatActivity {
                 }
                 if(TextUtils.isEmpty(password)){
                     Toast.makeText(Register.this, "Enter Password", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(TextUtils.isEmpty(confirmPassword)){
+                    Toast.makeText(Register.this, "Confirm Password", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(password.length() < 6){
@@ -91,8 +97,11 @@ public class Register extends AppCompatActivity {
                     Toast.makeText(Register.this, "Password must contain at least one uppercase letter, one lowercase letter, and one digit", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if(!password.equals(confirmPassword)) {
+                    Toast.makeText(Register.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+                    return;
 
-
+                }
 
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
@@ -123,6 +132,7 @@ public class Register extends AppCompatActivity {
 //    if it meets the criteria laid out it will return a true or false flag in a boolean form to the above if statement,
 //      if it meets the criteria the user will see a message saying account created and be able to login, if the password is
 //      is not valid the user will be prompted that the password entered is missing whatever in this list to be valid.
+
     private boolean isValidPassword(String password) {
         Pattern pattern;
         Matcher matcher;

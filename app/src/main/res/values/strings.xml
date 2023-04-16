@@ -20,6 +20,7 @@
     <string name="logout">Logout</string>
     <string name="reset_password">Reset Password</string>
     <string name="name">Name</string>
+    <string name="confirmpassword">Confirm password</string>
 
 
 </resources>
