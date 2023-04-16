@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.firebase.ui.auth.AuthUI;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -80,9 +81,13 @@ public class DashboardActivity extends AppCompatActivity {
                     fragmentTransaction2.commit();
                     return true;
 // logout button is causing me issues getting the correct call right and grabbing the session and login someone out of there session
-                case R.id.logout:
-                    actionBar.setTitle("Logout");
-                   // auth.signOut();
+                case R.id.settings:
+                    actionBar.setTitle("settings");
+                    SettingsFragment fragment5 = new SettingsFragment();
+                    FragmentTransaction fragmentTransaction5 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction5.replace(R.id.content, fragment5, "");
+                    fragmentTransaction5.commit();
+
 
                     return true;
             }

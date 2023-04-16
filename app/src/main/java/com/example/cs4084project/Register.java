@@ -3,6 +3,7 @@ package com.example.cs4084project;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,9 +21,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class Register extends AppCompatActivity {
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-    TextInputEditText editTextEmail, editTextPassword;
+public class Register extends AppCompatActivity {
+// initialising variables and Firebase authentication
+    TextInputEditText editTextEmail, editTextPassword, editTextConfirmPassword;
     Button buttonReg;
     private FirebaseAuth mAuth;
     ProgressBar progressBar;
@@ -41,13 +45,16 @@ public class Register extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         mAuth = FirebaseAuth.getInstance();
+
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
+        editTextConfirmPassword = findViewById(R.id.confirmpassword);
         buttonReg = findViewById(R.id.btn_register);
         progressBar = findViewById(R.id.progressBar);
         textview = findViewById(R.id.loginNow);
@@ -63,10 +70,12 @@ public class Register extends AppCompatActivity {
         buttonReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
-                String email, password;
+                // progress bar has been hidden as it can fool people into thinking something is loading
+                progressBar.setVisibility(View.GONE);
+                String name, email, password;
                 email = String.valueOf(editTextEmail.getText());
                 password = String.valueOf(editTextPassword.getText());
+                String confirmPassword = String.valueOf(editTextConfirmPassword.getText());
 
                 if(TextUtils.isEmpty(email)){
                     Toast.makeText(Register.this, "Enter Email", Toast.LENGTH_SHORT).show();
@@ -76,32 +85,62 @@ public class Register extends AppCompatActivity {
                     Toast.makeText(Register.this, "Enter Password", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if(TextUtils.isEmpty(confirmPassword)){
+                    Toast.makeText(Register.this, "Confirm Password", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(password.length() < 6){
+                    Toast.makeText(Register.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(!isValidPassword(password)){
+                    Toast.makeText(Register.this, "Password must contain at least one uppercase letter, one lowercase letter, and one digit", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(!password.equals(confirmPassword)) {
+                    Toast.makeText(Register.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+                    return;
 
+                }
 
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
+                                // progress bar has been hidden as it can fool people into thinking something is loading
                                 progressBar.setVisibility(View.GONE);
                                 if (task.isSuccessful()) {
-
+                                    // User registration successful
                                     Toast.makeText(Register.this, "Account created.",
                                             Toast.LENGTH_SHORT).show();
-                                    // Sign in success, update UI with the signed-in user's information
-                                   // Log.d(TAG, "createUserWithEmail:success");
-                                    //FirebaseUser user = mAuth.getCurrentUser();
-                                    //updateUI(user);
                                 } else {
-
-                                    // If sign in fails, display a message to the user.
-                                    //Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                    Toast.makeText(Register.this, "Authentication failed.",
+                                    // User registration failed
+                                    String errorMessage = task.getException().getMessage();
+                                    Toast.makeText(Register.this, "Authentication failed: " + errorMessage,
                                             Toast.LENGTH_SHORT).show();
-                                   // updateUI(null);
                                 }
                             }
                         });
+
+
+
             }
         });
+
+    }
+//  This is just a method that takes the password entered and puts it in this method where it is checked,
+//    if it meets the criteria laid out it will return a true or false flag in a boolean form to the above if statement,
+//      if it meets the criteria the user will see a message saying account created and be able to login, if the password is
+//      is not valid the user will be prompted that the password entered is missing whatever in this list to be valid.
+
+    private boolean isValidPassword(String password) {
+        Pattern pattern;
+        Matcher matcher;
+        final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$";
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+        return matcher.matches();
     }
 }
+
+

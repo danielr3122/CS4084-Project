@@ -107,23 +107,6 @@ public class NewPostFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
-
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference();
-
-        gson = new Gson();
-
-        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA) ==
-                PackageManager.PERMISSION_DENIED
-        ) {
-            String[] permission = {
-                    android.Manifest.permission.CAMERA
-            };
-            requestPermissions(permission, 100);
-        }
-
-
     }
 
     @Override

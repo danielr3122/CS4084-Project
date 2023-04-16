@@ -18,5 +18,10 @@
     <string name="image_description">Post Image</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="logout">Logout</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="name">Name</string>
+    <string name="confirmpassword">Confirm password</string>
+
 
 </resources>

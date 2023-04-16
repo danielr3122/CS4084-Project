@@ -23,8 +23,8 @@
         android:title="Post"/>
 
     <item
-        android:id="@+id/logout"
+        android:id="@+id/settings"
         android:icon="@drawable/baseline_logout_24"
-        android:title="Logout" />
+        android:title="Settings" />
 
 </menu>
