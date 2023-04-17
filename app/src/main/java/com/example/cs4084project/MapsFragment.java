@@ -19,6 +19,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsFragment extends Fragment {
 
+    public double latitude;
+    public double longitude;
+
+    public MapsFragment(double latitude, double longitude){
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         /**
@@ -32,9 +40,9 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            LatLng currLocation = new LatLng(latitude, longitude);
+            googleMap.addMarker(new MarkerOptions().position(currLocation).title("T.H.E. Marker"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currLocation));
         }
     };
 

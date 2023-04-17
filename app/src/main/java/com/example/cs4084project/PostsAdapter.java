@@ -1,26 +1,32 @@
 package com.example.cs4084project;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
+public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView captionText;
         public ImageView imageView;
+        public Button locationButton;
 
         public ViewHolder(View itemView){
             super(itemView);
-            captionText = (TextView) itemView.findViewById(R.id.post_caption);
-            imageView = (ImageView) itemView.findViewById(R.id.post_image);
+            captionText = itemView.findViewById(R.id.post_caption);
+            imageView = itemView.findViewById(R.id.post_image);
+            locationButton = itemView.findViewById(R.id.location_button);
         }
     }
 
@@ -46,10 +52,17 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         textView.setText(post.getCaption());
         ImageView imageView = holder.imageView;
         imageView.setImageBitmap(post.getImage());
+        Button locationBtn = holder.locationButton;
+        locationBtn.setOnClickListener(view -> showMapsFragment(post.getLatitude(), post.getLongitude(), view));
     }
 
     @Override
     public int getItemCount(){
         return allPosts.size();
+    }
+
+    public void showMapsFragment(double latitude, double longitude, View view){
+        Fragment mapsFragment = new MapsFragment(latitude, longitude);
+        ((AppCompatActivity) view.getContext()).getSupportFragmentManager().beginTransaction().replace(R.id.content, mapsFragment).addToBackStack(null).commit();
     }
 }
