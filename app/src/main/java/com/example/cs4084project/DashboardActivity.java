@@ -57,9 +57,9 @@ public class DashboardActivity extends AppCompatActivity {
                     fragmentTransaction.commit();
                     return true;
 
-                case R.id.notifications:
-                    actionBar.setTitle("Profile");
-                    NotificationsFragment fragment4= new NotificationsFragment();
+                case R.id.search:
+                    actionBar.setTitle("Search");
+                    SearchFragment fragment4= new SearchFragment();
                     FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction4.replace(R.id.content, fragment4);
                     fragmentTransaction4.commit();
