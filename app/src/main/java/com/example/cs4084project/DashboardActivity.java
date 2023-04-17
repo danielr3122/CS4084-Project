@@ -59,7 +59,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                 case R.id.search:
                     actionBar.setTitle("Search");
-                    SearchFragment fragment4= new SearchFragment();
+                    Search fragment4= new Search();
                     FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction4.replace(R.id.content, fragment4);
                     fragmentTransaction4.commit();

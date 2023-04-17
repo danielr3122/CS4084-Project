@@ -9,10 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class SearchFragment extends Fragment {
+public class Search extends Fragment {
 
 
-    public SearchFragment() {
+    public class User {
+        private String name;
+        private String email;
+
+
+        public User(String name, String email) {
+            this.name = name;
+            this.email = email;
+        }
+    }
+
+    public Search() {
         // Required empty public constructor
     }
 
@@ -28,6 +39,6 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notifications, container, false);
+        return inflater.inflate(R.layout.search_notifications, container, false);
     }
 }
