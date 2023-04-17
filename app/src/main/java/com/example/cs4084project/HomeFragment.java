@@ -47,8 +47,6 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        rvPosts = view.findViewById(R.id.rvPosts);
-
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference().child("Posts");
 
@@ -75,6 +73,8 @@ public class HomeFragment extends Fragment {
                                 progressDialog.setProgress((100/numOfPosts) * currPostNum);
 
                                 if(currPostNum == numOfPosts){
+                                    currPostNum = 0;
+                                    rvPosts = view.findViewById(R.id.rvPosts);
                                     progressDialog.setProgress(100);
                                     progressDialog.dismiss();
                                     rvPosts.setHasFixedSize(true);
