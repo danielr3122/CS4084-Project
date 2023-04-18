@@ -106,7 +106,7 @@ public class HomeFragment extends Fragment {
 
         String decodedCaption = jsonObject.getString("caption");
 
-        if(jsonObject.has("longitude") && jsonObject.has("latitude")){
+        if(jsonObject.getBoolean("containsLocation")){
             double decodedLongitude = jsonObject.getDouble("longitude");
             double decodedLatitude = jsonObject.getDouble("latitude");
             return new Post(decodedBitmap, decodedCaption, decodedLongitude, decodedLatitude);

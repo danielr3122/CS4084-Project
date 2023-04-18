@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,6 +8,7 @@
 
     <ImageView
         android:id="@+id/postImage"
+        android:contentDescription="@string/post_image_description"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_weight="1"
@@ -19,10 +19,11 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:ems="10"
-        android:hint="Tap To Enter Caption..."
+        android:hint="@string/caption_hint"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:autofillHints="@string/caption_hint" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,7 +37,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Gallery"
+            android:text="@string/gallery_button"
             android:textSize="24sp" />
 
         <Button
@@ -45,7 +46,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Camera"
+            android:text="@string/camera_button"
             android:textSize="24sp" />
     </LinearLayout>
 
@@ -55,7 +56,7 @@
         android:layout_height="20dp"
         android:layout_margin="10dp"
         android:layout_weight="1"
-        android:text="Tag Current Location"
+        android:text="@string/tag_location"
         android:textSize="24sp" />
 
     <Button
@@ -64,7 +65,7 @@
         android:layout_height="20dp"
         android:layout_margin="10dp"
         android:layout_weight="1"
-        android:text="Upload"
+        android:text="@string/upload_button"
         android:textSize="24sp" />
 
 </LinearLayout>
