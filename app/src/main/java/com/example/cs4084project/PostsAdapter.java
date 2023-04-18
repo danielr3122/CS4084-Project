@@ -1,5 +1,6 @@
 package com.example.cs4084project;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import kotlin.internal.UProgressionUtilKt;
+
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
     public Context prevContext;
+    private ProgressDialog progressDialog;
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView captionText;
@@ -63,7 +67,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         } else {
             locationBtn.setVisibility(View.VISIBLE);
         }
-        locationBtn.setOnClickListener(view -> showMapsFragment(view, post.getLatitude(), post.getLongitude()));
+        locationBtn.setOnClickListener(view -> {
+            progressDialog = new ProgressDialog(view.getContext());
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Loading Location");
+            progressDialog.show();
+            showMapsFragment(view, post.getLatitude(), post.getLongitude());
+        });
     }
 
     @Override
@@ -72,7 +82,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     }
 
     public void showMapsFragment(View view, double latitude, double longitude){
-        MapsFragment fragment5 = new MapsFragment(latitude, longitude);
+        MapsFragment fragment5 = new MapsFragment(progressDialog, latitude, longitude);
         FragmentTransaction fragmentTransaction = ((AppCompatActivity)prevContext).getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment5, "");
         fragmentTransaction.addToBackStack("Return to Home Screen");

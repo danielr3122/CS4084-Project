@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +21,10 @@ public class MapsFragment extends Fragment {
 
     public double latitude;
     public double longitude;
+    public ProgressDialog progressDialog;
 
-    public MapsFragment(double latitude, double longitude){
+    public MapsFragment(ProgressDialog progressDialog, double latitude, double longitude){
+        this.progressDialog = progressDialog;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -42,6 +45,7 @@ public class MapsFragment extends Fragment {
             LatLng currLocation = new LatLng(latitude, longitude);
             googleMap.addMarker(new MarkerOptions().position(currLocation).title("T.H.E. Marker"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(currLocation));
+            progressDialog.dismiss();
         }
     };
 
