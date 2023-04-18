@@ -20,15 +20,18 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Register extends AppCompatActivity {
 // initialising variables and Firebase authentication
-    TextInputEditText editTextEmail, editTextPassword, editTextConfirmPassword;
+    TextInputEditText editTextEmail, editTextPassword, editTextConfirmPassword, editTextFirstName, editTextSecondName;
     Button buttonReg;
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
     ProgressBar progressBar;
     TextView textview;
 
@@ -37,6 +40,7 @@ public class Register extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         if(currentUser != null){
             Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
             startActivity(intent);
@@ -52,6 +56,8 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         mAuth = FirebaseAuth.getInstance();
 
+//        editTextFirstName =findViewById(R.id.fName);
+//        editTextSecondName = findViewById(R.id.sName);
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
         editTextConfirmPassword = findViewById(R.id.confirmpassword);
@@ -141,6 +147,17 @@ public class Register extends AppCompatActivity {
         matcher = pattern.matcher(password);
         return matcher.matches();
     }
+
+//    public void sendData(View view){
+//        writeNewUser();
+//    }
+//    public void writeNewUser(){
+//       User user = new User( editTextFirstName.getText().toString(),
+//               editTextSecondName.getText().toString(),
+//               editTextEmail.getText().toString());
+//
+//       mDatabase.child("users").child(user.get)
+//    }
 }
 
 

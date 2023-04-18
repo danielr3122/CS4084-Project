@@ -23,8 +23,8 @@
         android:title="Post"/>
 
     <item
-        android:id="@+id/settings"
-        android:icon="@drawable/baseline_logout_24"
-        android:title="Settings" />
+        android:id="@+id/editProfile"
+        android:icon="@android:drawable/ic_dialog_info"
+        android:title="Edit Profile" />
 
 </menu>

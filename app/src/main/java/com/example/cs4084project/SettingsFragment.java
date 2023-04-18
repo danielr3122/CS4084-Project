@@ -19,40 +19,40 @@ import java.util.zip.Inflater;
 
 public class SettingsFragment extends Fragment {
 
-Button buttonLogout;
-FirebaseAuth mAuth, auth;
-    public SettingsFragment() {
-        // Required empty public constructor
-    }
+//Button buttonLogout;
+//FirebaseAuth mAuth, auth;
+//    public SettingsFragment() {
+//        // Required empty public constructor
+//    }
+//
+//
+//
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        View view = inflater.inflate(R.layout. fragment_settings, container, false);
+
+       // Button buttonLogout = (Button) view.findViewById(R.id.btn_Logout);
+       // buttonLogout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FirebaseAuth.getInstance().signOut();
+//                Intent intent = new Intent(getActivity(), Login.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+//                getActivity().finish();
+//            }
+//        });
+//
+//        return view;
+//            }
 
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout. fragment_settings, container, false);
 
-        Button buttonLogout = (Button) view.findViewById(R.id.btn_Logout);
-        buttonLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getActivity(), Login.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                getActivity().finish();
-            }
-        });
-
-        return view;
-            }
-
-
-
-
-
-    private void signout() {
-        FirebaseAuth.getInstance().signOut();
-    }
+//
+//    private void signout() {
+//        FirebaseAuth.getInstance().signOut();
+//    }
 
 //
 //    @Override

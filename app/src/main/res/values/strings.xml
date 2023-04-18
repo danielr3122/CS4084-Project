@@ -33,6 +33,13 @@
 
     <!--  Strings related to setting page  -->
     <string name="setting_notification_label">Notifications</string>
+    <string name="second_name">Second Name</string>
+    <string name="first_name">First Name</string>
+    <string name="enter_first_name">Enter First Name</string>
+    <string name="enter_second_name">Enter Second Name</string>
+    <string name="enter_nickname">Enter Nickname</string>
+    <string name="enter_email">Enter email</string>
+    <string name="send_data">send Data</string>
 
 
 </resources>

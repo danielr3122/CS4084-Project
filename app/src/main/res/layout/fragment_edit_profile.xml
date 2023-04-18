@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".editProfileFragment">
+
+    <EditText
+        android:id="@+id/edit_id1"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:hint="@string/enter_first_name"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/edit_id2"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:hint="@string/enter_second_name"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/edit_id3"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:hint="@string/enter_nickname"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/edit_id4"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:hint="@string/enter_email"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btn_sendData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/send_data"
+        android:textSize="20dp"
+        android:onClick="sendData"/>
+
+
+</LinearLayout>
