@@ -50,44 +50,42 @@ public class DashboardActivity extends AppCompatActivity {
 // creating the nav bar buttons and linking them to a page when clicked on
                 case R.id.nav_home:
                     actionBar.setTitle("Home");
-                    HomeFragment fragment = new HomeFragment();
-                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.content, fragment, "");
-                    fragmentTransaction.commit();
+                    HomeFragment homeFragment = new HomeFragment();
+                    FragmentTransaction homeFragTransaction = getSupportFragmentManager().beginTransaction();
+                    homeFragTransaction.replace(R.id.content, homeFragment, "");
+                    homeFragTransaction.commit();
                     return true;
 
-                case R.id.notifications:
-                    actionBar.setTitle("Profile");
-                    NotificationsFragment fragment4= new NotificationsFragment();
-                    FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction4.replace(R.id.content, fragment4);
-                    fragmentTransaction4.commit();
+                case R.id.nav_search:
+                    actionBar.setTitle("Search");
+                    SearchFragment searchFragment= new SearchFragment();
+                    FragmentTransaction searchFragTransaction = getSupportFragmentManager().beginTransaction();
+                    searchFragTransaction.replace(R.id.content, searchFragment);
+                    searchFragTransaction.commit();
+                    return true;
+
+                case R.id.nav_post:
+                    actionBar.setTitle("Create Post");
+                    NewPostFragment postFragment = new NewPostFragment();
+                    FragmentTransaction postFragTransaction = getSupportFragmentManager().beginTransaction();
+                    postFragTransaction.replace(R.id.content, postFragment, "");
+                    postFragTransaction.commit();
+                    return true;
+
+                case R.id.nav_settings:
+                    actionBar.setTitle("Settings");
+                    SettingsFragment settingsFragment = new SettingsFragment();
+                    FragmentTransaction settingsFragTransaction = getSupportFragmentManager().beginTransaction();
+                    settingsFragTransaction.replace(R.id.content, settingsFragment, "");
+                    settingsFragTransaction.commit();
                     return true;
 
                 case R.id.nav_profile:
                     actionBar.setTitle("Profile");
-                    ProfileFragment fragment1 = new ProfileFragment();
-                    FragmentTransaction fragmentTransaction1 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction1.replace(R.id.content, fragment1);
-                    fragmentTransaction1.commit();
-                    return true;
-
-                case R.id.post:
-                    actionBar.setTitle("Create Post");
-                    NewPostFragment fragment2 = new NewPostFragment();
-                    FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction2.replace(R.id.content, fragment2, "");
-                    fragmentTransaction2.commit();
-                    return true;
-// logout button is causing me issues getting the correct call right and grabbing the session and login someone out of there session
-                case R.id.settings:
-                    actionBar.setTitle("settings");
-                    SettingsFragment fragment5 = new SettingsFragment();
-                    FragmentTransaction fragmentTransaction5 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction5.replace(R.id.content, fragment5, "");
-                    fragmentTransaction5.commit();
-
-
+                    ProfileFragment profileFragment = new ProfileFragment();
+                    FragmentTransaction profileFragTransaction = getSupportFragmentManager().beginTransaction();
+                    profileFragTransaction.replace(R.id.content, profileFragment);
+                    profileFragTransaction.commit();
                     return true;
             }
             return false;

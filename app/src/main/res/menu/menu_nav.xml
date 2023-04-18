@@ -9,22 +9,22 @@
         android:icon="@drawable/ic_home"
         android:title="Home" />
     <item
-        android:id="@+id/notifications"
+        android:id="@+id/nav_search"
         android:icon="@drawable/ic_post"
-        android:title="Notifications" />
-    <item
-        android:id="@+id/nav_profile"
-        android:icon="@drawable/ic_account"
-        android:title="Profile" />
+        android:title="Search" />
 
     <item
-        android:id="@+id/post"
+        android:id="@+id/nav_post"
         android:icon="@drawable/ic_post"
         android:title="Post"/>
 
     <item
-        android:id="@+id/settings"
+        android:id="@+id/nav_settings"
         android:icon="@drawable/baseline_logout_24"
         android:title="Settings" />
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_account"
+        android:title="Profile" />
 
 </menu>
