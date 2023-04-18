@@ -16,13 +16,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
-public class editProfileFragment extends Fragment {
+public class EditProfileFragment extends Fragment {
 
     private DatabaseReference mDatabase;
     private EditText editText1, editText2, editText3, editText4;
     private FirebaseUser firebaseUser;
 
-    public editProfileFragment() {
+    public EditProfileFragment() {
         // Required empty public constructor
     }
 

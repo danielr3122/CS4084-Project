@@ -83,7 +83,7 @@ public class DashboardActivity extends AppCompatActivity {
 // logout button is causing me issues getting the correct call right and grabbing the session and login someone out of there session
                 case R.id.editProfile:
                     actionBar.setTitle("Edit Profile");
-                    editProfileFragment fragment5 = new editProfileFragment();
+                    EditProfileFragment fragment5 = new EditProfileFragment();
                     FragmentTransaction fragmentTransaction5 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction5.replace(R.id.content, fragment5, "");
                     fragmentTransaction5.commit();
