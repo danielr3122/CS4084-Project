@@ -1,22 +1,14 @@
 package com.example.cs4084project;
 
 import android.content.Context;
-import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import android.app.Fragment;
-
 import androidx.appcompat.app.AppCompatActivity;
-//import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -75,6 +67,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         MapsFragment fragment5 = new MapsFragment(latitude, longitude);
         FragmentTransaction fragmentTransaction = ((AppCompatActivity)prevContext).getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment5, "");
+        fragmentTransaction.addToBackStack("Return to Home Screen");
         fragmentTransaction.commit();
     }
 }
