@@ -60,6 +60,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSuccess(ListResult listResult) {
                 numOfPosts = listResult.getItems().size();
+                if(numOfPosts == 0){
+                    progressDialog.dismiss();
+                }
                 for(StorageReference item : listResult.getItems()) {
                     item.getBytes(1000000).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
