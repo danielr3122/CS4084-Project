@@ -11,12 +11,11 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-//import com.firebase.ui.auth.AuthUI;
 
 public class DashboardActivity extends AppCompatActivity {
 
-   FirebaseAuth auth;
-   FirebaseUser user;
+    FirebaseAuth auth;
+    FirebaseUser user;
     String myuid;
     ActionBar actionBar;
     BottomNavigationView navigationView;

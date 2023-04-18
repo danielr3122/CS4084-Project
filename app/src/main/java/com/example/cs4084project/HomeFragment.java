@@ -47,8 +47,6 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        rvPosts = view.findViewById(R.id.rvPosts);
-
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference().child("Posts");
 
@@ -75,11 +73,13 @@ public class HomeFragment extends Fragment {
                                 progressDialog.setProgress((100/numOfPosts) * currPostNum);
 
                                 if(currPostNum == numOfPosts){
+                                    currPostNum = 0;
+                                    rvPosts = view.findViewById(R.id.rvPosts);
                                     progressDialog.setProgress(100);
                                     progressDialog.dismiss();
                                     rvPosts.setHasFixedSize(true);
                                     rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-                                    PostsAdapter postsAdapter = new PostsAdapter(allPosts);
+                                    PostsAdapter postsAdapter = new PostsAdapter(allPosts, getContext());
                                     rvPosts.setAdapter(postsAdapter);
                                 }
                             } catch (JSONException e) {
@@ -106,7 +106,12 @@ public class HomeFragment extends Fragment {
 
         String decodedCaption = jsonObject.getString("caption");
 
-        Post postFromJSON = new Post(decodedBitmap, decodedCaption);
-        return postFromJSON;
+        if(jsonObject.has("longitude") && jsonObject.has("latitude")){
+            double decodedLongitude = jsonObject.getDouble("longitude");
+            double decodedLatitude = jsonObject.getDouble("latitude");
+            return new Post(decodedBitmap, decodedCaption, decodedLongitude, decodedLatitude);
+        }
+
+        return new Post(decodedBitmap, decodedCaption);
     }
 }

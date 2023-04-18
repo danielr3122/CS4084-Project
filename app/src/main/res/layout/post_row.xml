@@ -2,20 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="16dp">
+    android:layout_marginTop="16dp"
+    android:background="@drawable/border">
 
     <ImageView
         android:id="@+id/post_image"
+        android:contentDescription="@string/post_image_description"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="400dp" />
 
     <TextView
         android:id="@+id/post_caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/post_image"
+        android:gravity="center_horizontal"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/location_button"
+        android:text="@string/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:textSize="23sp"
-        android:paddingBottom="16dp" />
+        android:layout_below="@+id/post_caption"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
