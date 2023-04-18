@@ -2,20 +2,29 @@ package com.example.cs4084project;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import android.app.Fragment;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+//import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
+
+    public Context prevContext;
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView captionText;
@@ -32,8 +41,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     private ArrayList<Post> allPosts;
 
-    public PostsAdapter(ArrayList<Post> allPosts){
+    public PostsAdapter(ArrayList<Post> allPosts, Context prevContext){
         this.allPosts = allPosts;
+        this.prevContext = prevContext;
     }
 
     @Override
@@ -53,7 +63,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         ImageView imageView = holder.imageView;
         imageView.setImageBitmap(post.getImage());
         Button locationBtn = holder.locationButton;
-        locationBtn.setOnClickListener(view -> showMapsFragment(post.getLatitude(), post.getLongitude(), view));
+        locationBtn.setOnClickListener(view ->  showMapsFragment(view, post.getLatitude(), post.getLongitude()));
     }
 
     @Override
@@ -61,8 +71,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         return allPosts.size();
     }
 
-    public void showMapsFragment(double latitude, double longitude, View view){
-        Fragment mapsFragment = new MapsFragment(latitude, longitude);
-        ((AppCompatActivity) view.getContext()).getSupportFragmentManager().beginTransaction().replace(R.id.content, mapsFragment).addToBackStack(null).commit();
+    public void showMapsFragment(View view, double latitude, double longitude){
+        MapsFragment fragment5 = new MapsFragment(latitude, longitude);
+        FragmentTransaction fragmentTransaction5 = ((AppCompatActivity)prevContext).getSupportFragmentManager().beginTransaction();
+        fragmentTransaction5.replace(R.id.content, fragment5, "");
+        fragmentTransaction5.commit();
     }
 }

@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment {
                                     progressDialog.dismiss();
                                     rvPosts.setHasFixedSize(true);
                                     rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-                                    PostsAdapter postsAdapter = new PostsAdapter(allPosts);
+                                    PostsAdapter postsAdapter = new PostsAdapter(allPosts, getContext());
                                     rvPosts.setAdapter(postsAdapter);
                                 }
                             } catch (JSONException e) {
