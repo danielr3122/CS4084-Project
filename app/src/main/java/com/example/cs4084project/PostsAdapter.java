@@ -73,8 +73,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     public void showMapsFragment(View view, double latitude, double longitude){
         MapsFragment fragment5 = new MapsFragment(latitude, longitude);
-        FragmentTransaction fragmentTransaction5 = ((AppCompatActivity)prevContext).getSupportFragmentManager().beginTransaction();
-        fragmentTransaction5.replace(R.id.content, fragment5, "");
-        fragmentTransaction5.commit();
+        FragmentTransaction fragmentTransaction = ((AppCompatActivity)prevContext).getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content, fragment5, "");
+        fragmentTransaction.commit();
     }
 }
