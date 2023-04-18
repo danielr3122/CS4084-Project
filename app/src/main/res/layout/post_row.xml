@@ -7,6 +7,7 @@
 
     <ImageView
         android:id="@+id/post_image"
+        android:contentDescription="@string/post_image_description"
         android:layout_width="match_parent"
         android:layout_height="400dp" />
 
@@ -20,7 +21,7 @@
 
     <Button
         android:id="@+id/location_button"
-        android:text="Location"
+        android:text="@string/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/post_caption"
