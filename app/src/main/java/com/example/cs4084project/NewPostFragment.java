@@ -232,8 +232,6 @@ public class NewPostFragment extends Fragment {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-
-
             }
         });
 
@@ -291,39 +289,6 @@ public class NewPostFragment extends Fragment {
                         pd.dismiss();
                     }
                 });
-
-
-    }
-
-
-
-
-    /*  To use the method getPostFromJSON()
-
-
-        Post testPost;
-        try {
-            testPost = getPostFromJSON(jsonNewPost);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        */
-    private Post getPostFromJSON(String json) throws JSONException {
-        JSONObject jsonObject = new JSONObject(json);
-
-        String encodedImage = jsonObject.getString("imageStr");
-        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
-        Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-
-        String decodedCaption = jsonObject.getString("caption");
-
-        if(jsonObject.has("longitude") && jsonObject.has("latitude")){
-            double decodedLongitude = jsonObject.getDouble("longitude");
-            double decodedLatitude = jsonObject.getDouble("latitude");
-            return new Post(decodedBitmap, decodedCaption, decodedLongitude, decodedLatitude);
-        }
-
-        return new Post(decodedBitmap, decodedCaption);
     }
 }
 

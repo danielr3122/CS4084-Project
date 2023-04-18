@@ -17,6 +17,14 @@
     <string name="click_to_register">Click To Register</string>
     <string name="location">Location</string>
     <string name="post_image_description">Post Image</string>
+    <string name="search_fragment">Search Fragment</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="hash">#</string>
+    <string name="caption_hint">Tap To Enter Caption…</string>
+    <string name="gallery_button">Gallery</string>
+    <string name="camera_button">Camera</string>
+    <string name="tag_location">Tag Current Location</string>
+    <string name="upload_button">Upload</string>
 
 
     <!-- Strings related to profile page -->
