@@ -9,7 +9,6 @@
     android:padding="15dp"
     tools:context=".Register">
 
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,6 +30,10 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -39,9 +42,14 @@
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/password" />
+            android:hint="@string/password"
+            android:inputType="textPassword" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -51,7 +59,8 @@
             android:id="@+id/confirmpassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/confirmpassword" />
+            android:hint="@string/confirmpassword"
+            android:inputType="textPassword" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -61,12 +70,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
     <Button
         android:id="@+id/btn_register"
         android:text="@string/register"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
 
     <TextView
         android:textSize="20sp"
