@@ -1,5 +1,7 @@
 package com.example.cs4084project;
 
+import static android.view.View.INVISIBLE;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,6 +57,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         ImageView imageView = holder.imageView;
         imageView.setImageBitmap(post.getImage());
         Button locationBtn = holder.locationButton;
+        if(!post.hasLocation() || (post.getLatitude() == 0 && post.getLongitude() == 0) ){
+            locationBtn.setVisibility(INVISIBLE);
+        }
         locationBtn.setOnClickListener(view ->  showMapsFragment(view, post.getLatitude(), post.getLongitude()));
     }
 

@@ -18,11 +18,13 @@ public class Post{
     private String imageStr;
     private double longitude;
     private double latitude;
+    private boolean containsLocation;
 
     public Post(Bitmap image, String caption){
         this.image = image;
         this.imageStr = getStringFromBitmap(image);
         this.caption = caption;
+        containsLocation = false;
     }
 
     public Post(Bitmap image, String caption, double longitude, double latitude){
@@ -31,6 +33,7 @@ public class Post{
         this.caption = caption;
         this.longitude = longitude;
         this.latitude = latitude;
+        containsLocation = true;
     }
 
 
@@ -76,7 +79,9 @@ public class Post{
         return encodedImage;
     }
 
-
+    public boolean hasLocation(){
+        return containsLocation;
+    }
 
 }
 
