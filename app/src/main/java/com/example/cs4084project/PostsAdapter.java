@@ -20,6 +20,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     public Context prevContext;
     private ProgressDialog progressDialog;
 
+    // Sets base components of each item in the recyclerview
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView captionText;
         public ImageView imageView;
@@ -35,11 +36,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     private ArrayList<Post> allPosts;
 
+    // Initializes PostsAdapter
     public PostsAdapter(ArrayList<Post> allPosts, Context prevContext){
         this.allPosts = allPosts;
         this.prevContext = prevContext;
     }
 
+    // Instantiates XML contents for each item in the recyclerview
     @Override
     public PostsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         Context context = parent.getContext();
@@ -49,6 +52,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         return viewHolder;
     }
 
+    // Defines the interaction for each position in the recyclerview
     @Override
     public void onBindViewHolder(PostsAdapter.ViewHolder holder, int position){
         Post post = allPosts.get(position);
@@ -58,11 +62,16 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         imageView.setImageBitmap(post.getImage());
         textView.setText(post.getCaption());
 
+        // Removes the Location Button
+        // if the post doesn't have a location
         if(!post.hasLocation()){
             locationBtn.setVisibility(View.GONE);
         } else {
             locationBtn.setVisibility(View.VISIBLE);
         }
+
+        // OnClick a loading bar appears while
+        // displaying the location in a Google Maps fragment
         locationBtn.setOnClickListener(view -> {
             progressDialog = new ProgressDialog(view.getContext());
             progressDialog.setIndeterminate(true);
@@ -77,6 +86,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         return allPosts.size();
     }
 
+    // Switches to the Google Maps Fragment to display location
     public void showMapsFragment(View view, double latitude, double longitude){
         MapsFragment fragment5 = new MapsFragment(progressDialog, latitude, longitude);
         FragmentTransaction fragmentTransaction = ((AppCompatActivity)prevContext).getSupportFragmentManager().beginTransaction();

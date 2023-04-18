@@ -50,19 +50,27 @@ public class HomeFragment extends Fragment {
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference().child("Posts");
 
+        // Displays loading bar while posts load in
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Refreshing Feed");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setProgress(0);
         progressDialog.show();
 
+        // Downloads all posts from Firebase Storage
         storageReference.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult listResult) {
                 numOfPosts = listResult.getItems().size();
+
+                // Ends loading if there are no posts
                 if(numOfPosts == 0){
                     progressDialog.dismiss();
                 }
+
+                // Loops through each post and adds it to an arraylist
+                // Once all posts have been read, it connects the adapter
+                // to the recyclerview, which displays all posts.
                 for(StorageReference item : listResult.getItems()) {
                     item.getBytes(1000000).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
@@ -100,13 +108,12 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    // Function used to decode Posts from their JSON form
     private Post getPostFromJSON(String json) throws JSONException {
         JSONObject jsonObject = new JSONObject(json);
-
         String encodedImage = jsonObject.getString("imageStr");
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
         Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-
         String decodedCaption = jsonObject.getString("caption");
 
         if(jsonObject.getBoolean("containsLocation")){
@@ -114,7 +121,6 @@ public class HomeFragment extends Fragment {
             double decodedLatitude = jsonObject.getDouble("latitude");
             return new Post(decodedBitmap, decodedCaption, decodedLongitude, decodedLatitude);
         }
-
         return new Post(decodedBitmap, decodedCaption);
     }
 }
