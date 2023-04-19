@@ -12,7 +12,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,9 +41,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,35 +50,18 @@ import java.util.UUID;
 
 public class NewPostFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
 
     private ImageView imageView;
-    private Uri imageUri;
     private Bitmap imageBitmap;
-    private Button galleryBtn;
-    private Button cameraBtn;
 
     private TextView captionTxt;
-    private String caption;
 
     private Gson gson;
 
-    private Button uploadBtn;
-
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private Switch locationSwitch;
 
     Geocoder geocoder;
 
@@ -90,23 +69,17 @@ public class NewPostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
-
 
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
         geocoder = new Geocoder(getContext(), Locale.getDefault());
 
         gson = new Gson();
 
-        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA) ==
+        if (ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.CAMERA) ==
                 PackageManager.PERMISSION_DENIED
         ) {
             String[] permission = {
@@ -129,15 +102,15 @@ public class NewPostFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
         imageView = getView().findViewById(R.id.postImage);
-        galleryBtn =  getView().findViewById(R.id.gallery);
-        cameraBtn =  getView().findViewById(R.id.camera);
+        Button galleryBtn = getView().findViewById(R.id.gallery);
+        Button cameraBtn = getView().findViewById(R.id.camera);
 
-        captionTxt = (TextView) getView().findViewById(R.id.Caption);
+        captionTxt = getView().findViewById(R.id.Caption);
 
-        locationSwitch = getView().findViewById(R.id.locationSwitch);
+        Switch locationSwitch = getView().findViewById(R.id.locationSwitch);
         locationSwitch.setChecked(false);
 
-        uploadBtn =  getView().findViewById(R.id.uploadPost);
+        Button uploadBtn = getView().findViewById(R.id.uploadPost);
 
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
@@ -190,7 +163,7 @@ public class NewPostFragment extends Fragment {
                 @Override
                 public void onActivityResult(ActivityResult result){
                     if(result.getResultCode() == DashboardActivity.RESULT_OK) {
-                        imageUri = result.getData().getData();
+                        Uri imageUri = result.getData().getData();
 
                         try {
                             InputStream inputStream = getActivity().
@@ -223,14 +196,14 @@ public class NewPostFragment extends Fragment {
 
     private void fetchLastlocation() {
 
-        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
 
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
             return;
         }
 
-        Task task = fusedLocationProviderClient.getLastLocation();
+        Task<Location> task = fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
@@ -266,6 +239,7 @@ public class NewPostFragment extends Fragment {
 
     private void uploadPicture() {
 
+        String caption;
         if (captionTxt.getText() != null) {
             caption = captionTxt.getText().toString();
         } else caption = "";
@@ -306,28 +280,5 @@ public class NewPostFragment extends Fragment {
                 });
 
 
-    }
-
-
-
-
-    /*  To use the method getPostFromJSON()
-        Post testPost;
-        try {
-            testPost = getPostFromJSON(jsonNewPost);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        */
-    private Post getPostFromJSON(String json) throws JSONException {
-        JSONObject jsonObject = new JSONObject(json);
-
-        String encodedImage = jsonObject.getString("imageStr");
-        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
-        Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-
-        String decodedCaption = jsonObject.getString("caption");
-
-        return new Post(decodedBitmap, decodedCaption);
     }
 }
