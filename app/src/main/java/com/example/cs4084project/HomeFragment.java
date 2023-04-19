@@ -4,6 +4,11 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,16 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Base64;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONException;
@@ -31,10 +27,8 @@ import java.util.ArrayList;
 public class HomeFragment extends Fragment {
 
     private RecyclerView rvPosts;
-    private FirebaseStorage firebaseStorage;
-    private StorageReference storageReference;
     private byte[] postData;
-    private ArrayList<Post> allPosts = new ArrayList<Post>();
+    private ArrayList<Post> allPosts = new ArrayList<>();
     private int numOfPosts;
     private int currPostNum;
 
@@ -47,65 +41,51 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference().child("Posts");
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        StorageReference storageReference = firebaseStorage.getReference().child("Posts");
 
         // Displays loading bar while posts load in
         ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Refreshing Feed");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progressDialog.setProgress(0);
+        progressDialog.setMessage("Refreshing Feed...");
+        progressDialog.setIndeterminate(true);
         progressDialog.show();
 
         // Downloads all posts from Firebase Storage
-        storageReference.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
-            @Override
-            public void onSuccess(ListResult listResult) {
-                numOfPosts = listResult.getItems().size();
+        storageReference.listAll().addOnSuccessListener(listResult -> {
+            numOfPosts = listResult.getItems().size();
 
-                // Ends loading if there are no posts
-                if(numOfPosts == 0){
-                    progressDialog.dismiss();
-                }
+            // Ends loading if there are no posts
+            if(numOfPosts == 0){
+                progressDialog.dismiss();
+            }
 
-                // Loops through each post and adds it to an arraylist
-                // Once all posts have been read, it connects the adapter
-                // to the recyclerview, which displays all posts.
-                for(StorageReference item : listResult.getItems()) {
-                    item.getBytes(1000000).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] bytes) {
-                            postData = bytes;
-                            String postStringJSON = new String(postData);
-                            try {
-                                Post currPost = getPostFromJSON(postStringJSON);
-                                allPosts.add(currPost);
-                                currPostNum++;
-                                progressDialog.setProgress((100/numOfPosts) * currPostNum);
+            // Loops through each post and adds it to an arraylist
+            // Once all posts have been read, it connects the adapter
+            // to the recyclerview, which displays all posts.
+            for(StorageReference item : listResult.getItems()) {
+                item.getBytes(1000000).addOnSuccessListener(bytes -> {
+                    postData = bytes;
+                    String postStringJSON = new String(postData);
+                    try {
+                        Post currPost = getPostFromJSON(postStringJSON);
+                        allPosts.add(currPost);
+                        currPostNum++;
 
-                                if(currPostNum == numOfPosts){
-                                    currPostNum = 0;
-                                    rvPosts = view.findViewById(R.id.rvPosts);
-                                    progressDialog.setProgress(100);
-                                    progressDialog.dismiss();
-                                    rvPosts.setHasFixedSize(true);
-                                    rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
-                                    PostsAdapter postsAdapter = new PostsAdapter(allPosts, getContext());
-                                    rvPosts.setAdapter(postsAdapter);
-                                }
-                            } catch (JSONException e) {
-                                throw new RuntimeException(e);
-                            }
+                        if(currPostNum == numOfPosts){
+                            currPostNum = 0;
+                            rvPosts = view.findViewById(R.id.rvPosts);
+                            progressDialog.dismiss();
+                            rvPosts.setHasFixedSize(true);
+                            rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+                            PostsAdapter postsAdapter = new PostsAdapter(allPosts, getContext());
+                            rvPosts.setAdapter(postsAdapter);
                         }
-                    });
-                }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("Downloading Error", "Failed to download files");
-            }
-        });
+        }).addOnFailureListener(e -> Log.e("Downloading Error", "Failed to download files"));
     }
 
     // Function used to decode Posts from their JSON form
