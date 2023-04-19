@@ -46,6 +46,11 @@
     <string name="reset_password">Reset Password</string>
     <string name="name">Name</string>
     <string name="confirmpassword">Confirm password</string>
+    <string name="enter_first_name">Enter First Name</string>
+    <string name="enter_second_name">Enter Second Name</string>
+    <string name="enter_nickname">Enter User Name</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="send_data">send Data</string>
 
 
 </resources>

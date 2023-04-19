@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ public class SettingsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout. fragment_settings, container, false);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         Button buttonLogout = (Button) view.findViewById(R.id.btn_Logout);
         Button buttonChangeEmail = view.findViewById(R.id.btn_change_email);
@@ -73,6 +74,10 @@ public class SettingsFragment extends Fragment {
     private void changeEmail(String password, String newEmail){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String email = user.getEmail();
+        if(TextUtils.isEmpty(password) || TextUtils.isEmpty(newEmail)){
+            Toast.makeText(getContext(), "Please both a password and new email", Toast.LENGTH_SHORT).show();
+            return;
+        }
         AuthCredential credential = EmailAuthProvider.getCredential(email, password);
         user.reauthenticate(credential).addOnCompleteListener(task -> {
             if(task.isSuccessful()){
@@ -93,6 +98,10 @@ public class SettingsFragment extends Fragment {
     private void changePassword(String oldPassword, String newPassword){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String email = user.getEmail();
+        if(TextUtils.isEmpty(oldPassword) || TextUtils.isEmpty(newPassword)){
+            Toast.makeText(getContext(), "Password filed cannot be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
         AuthCredential credential = EmailAuthProvider.getCredential(email, oldPassword);
         user.reauthenticate(credential).addOnCompleteListener(task -> {
             if(task.isSuccessful()){

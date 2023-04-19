@@ -56,12 +56,12 @@ public class DashboardActivity extends AppCompatActivity {
                     homeFragTransaction.commit();
                     return true;
 
-                case R.id.nav_search:
-                    actionBar.setTitle("Search");
-                    SearchFragment searchFragment= new SearchFragment();
-                    FragmentTransaction searchFragTransaction = getSupportFragmentManager().beginTransaction();
-                    searchFragTransaction.replace(R.id.content, searchFragment);
-                    searchFragTransaction.commit();
+                case R.id.nav_profile:
+                    actionBar.setTitle("Profile");
+                    ProfileFragment profileFragment = new ProfileFragment();
+                    FragmentTransaction profileFragTransaction = getSupportFragmentManager().beginTransaction();
+                    profileFragTransaction.replace(R.id.content, profileFragment);
+                    profileFragTransaction.commit();
                     return true;
 
                 case R.id.nav_post:
@@ -80,12 +80,13 @@ public class DashboardActivity extends AppCompatActivity {
                     settingsFragTransaction.commit();
                     return true;
 
-                case R.id.nav_profile:
-                    actionBar.setTitle("Profile");
-                    ProfileFragment profileFragment = new ProfileFragment();
-                    FragmentTransaction profileFragTransaction = getSupportFragmentManager().beginTransaction();
-                    profileFragTransaction.replace(R.id.content, profileFragment);
-                    profileFragTransaction.commit();
+
+                case R.id.nav_edit:
+                    actionBar.setTitle("Edit Profile");
+                    EditProfileFragment editProfileFragment = new EditProfileFragment();
+                    FragmentTransaction editFragTransaction = getSupportFragmentManager().beginTransaction();
+                    editFragTransaction.replace(R.id.content, editProfileFragment, "");
+                    editFragTransaction.commit();
                     return true;
             }
             return false;

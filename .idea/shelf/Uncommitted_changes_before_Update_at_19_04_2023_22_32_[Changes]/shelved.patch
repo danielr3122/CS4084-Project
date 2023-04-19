@@ -1,0 +1,711 @@
+Index: app/src/main/java/com/example/cs4084project/SettingsFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.cs4084project;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.Toast;\r\n\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.auth.AuthCredential;\r\nimport com.google.firebase.auth.EmailAuthCredential;\r\nimport com.google.firebase.auth.EmailAuthProvider;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\n\r\n\r\npublic class SettingsFragment extends Fragment {\r\n\r\n    public SettingsFragment() {\r\n        // Required empty public constructor\r\n    }\r\n\r\n\r\n\r\n    @Override\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {\r\n        View view = inflater.inflate(R.layout. fragment_settings, container, false);\r\n\r\n        Button buttonLogout = (Button) view.findViewById(R.id.btn_Logout);\r\n        Button buttonChangeEmail = view.findViewById(R.id.btn_change_email);\r\n        Button buttonChangePassword = view.findViewById(R.id.btn_change_pw);\r\n        EditText newEmailET = view.findViewById(R.id.et_new_email);\r\n        EditText passwordET = view.findViewById(R.id.et_curr_password);\r\n        EditText oldPasswordET = view.findViewById(R.id.et_old_pw);\r\n        EditText newPasswordET = view.findViewById(R.id.et_new_pw);\r\n\r\n        buttonLogout.setOnClickListener(v -> {\r\n            FirebaseAuth.getInstance().signOut();\r\n            Intent intent = new Intent(getActivity(), Login.class);\r\n            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);\r\n            startActivity(intent);\r\n            requireActivity().finish();\r\n        });\r\n\r\n        buttonChangeEmail.setOnClickListener(view12 -> {\r\n            String password = passwordET.getText().toString().trim();\r\n            String newEmail = newEmailET.getText().toString().trim();\r\n            passwordET.setText(null);\r\n            newEmailET.setText(null);\r\n            changeEmail(password, newEmail);\r\n        });\r\n\r\n        buttonChangePassword.setOnClickListener(view1 -> {\r\n            String oldPassword = oldPasswordET.getText().toString().trim();\r\n            String newPassword = newPasswordET.getText().toString().trim();\r\n            oldPasswordET.setText(null);\r\n            newPasswordET.setText(null);\r\n            changePassword(oldPassword, newPassword);\r\n        });\r\n\r\n        return view;\r\n    }\r\n\r\n    // Updates user's email if the user enters the correct old email\r\n    private void changeEmail(String password, String newEmail){\r\n        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();\r\n        String email = user.getEmail();\r\n        AuthCredential credential = EmailAuthProvider.getCredential(email, password);\r\n        user.reauthenticate(credential).addOnCompleteListener(task -> {\r\n            if(task.isSuccessful()){\r\n                user.updateEmail(newEmail).addOnCompleteListener(task1 -> {\r\n                    if(!task1.isSuccessful()){\r\n                        Toast.makeText(getContext(), \"Oops, some thing went wrong. Please try again.\", Toast.LENGTH_SHORT).show();\r\n                    } else {\r\n                        Toast.makeText(getContext(), \"Successfully Changed Email\", Toast.LENGTH_SHORT).show();\r\n                    }\r\n                });\r\n            } else {\r\n                Toast.makeText(getContext(), \"Failure, Incorrect Password\", Toast.LENGTH_SHORT).show();\r\n            }\r\n        });\r\n    }\r\n\r\n    // Updates user's pw if the user enters the correct old pw\r\n    private void changePassword(String oldPassword, String newPassword){\r\n        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();\r\n        String email = user.getEmail();\r\n        AuthCredential credential = EmailAuthProvider.getCredential(email, oldPassword);\r\n        user.reauthenticate(credential).addOnCompleteListener(task -> {\r\n            if(task.isSuccessful()){\r\n                user.updatePassword(newPassword).addOnCompleteListener(task1 -> {\r\n                    if(!task1.isSuccessful()){\r\n                        Toast.makeText(getContext(), \"Oops, some thing went wrong. Please try again.\", Toast.LENGTH_SHORT).show();\r\n                    } else {\r\n                        Toast.makeText(getContext(), \"Successfully Changed Password\", Toast.LENGTH_SHORT).show();\r\n                    }\r\n                });\r\n            } else {\r\n                Toast.makeText(getContext(), \"Failure, Incorrect Old Password\", Toast.LENGTH_SHORT).show();\r\n            }\r\n        });\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/cs4084project/SettingsFragment.java b/app/src/main/java/com/example/cs4084project/SettingsFragment.java
+--- a/app/src/main/java/com/example/cs4084project/SettingsFragment.java	(revision 326373fbe52e80514c87aa13a8931ef29291377b)
++++ b/app/src/main/java/com/example/cs4084project/SettingsFragment.java	(date 1681927498960)
+@@ -6,6 +6,7 @@
+ import androidx.annotation.NonNull;
+ import androidx.fragment.app.Fragment;
+ 
++import android.text.TextUtils;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+@@ -32,7 +33,7 @@
+ 
+     @Override
+     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+-        View view = inflater.inflate(R.layout. fragment_settings, container, false);
++        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+ 
+         Button buttonLogout = (Button) view.findViewById(R.id.btn_Logout);
+         Button buttonChangeEmail = view.findViewById(R.id.btn_change_email);
+@@ -73,6 +74,10 @@
+     private void changeEmail(String password, String newEmail){
+         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+         String email = user.getEmail();
++        if(TextUtils.isEmpty(password) || TextUtils.isEmpty(newEmail)){
++            Toast.makeText(getContext(), "Please both a password and new email", Toast.LENGTH_SHORT).show();
++            return;
++        }
+         AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+         user.reauthenticate(credential).addOnCompleteListener(task -> {
+             if(task.isSuccessful()){
+@@ -93,6 +98,10 @@
+     private void changePassword(String oldPassword, String newPassword){
+         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+         String email = user.getEmail();
++        if(TextUtils.isEmpty(oldPassword) || TextUtils.isEmpty(newPassword)){
++            Toast.makeText(getContext(), "Password filed cannot be empty", Toast.LENGTH_SHORT).show();
++            return;
++        }
+         AuthCredential credential = EmailAuthProvider.getCredential(email, oldPassword);
+         user.reauthenticate(credential).addOnCompleteListener(task -> {
+             if(task.isSuccessful()){
+Index: app/src/main/res/layout/fragment_settings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".SettingsFragment\">\r\n\r\n    <EditText\r\n        android:id=\"@+id/et_new_email\"\r\n        android:layout_width=\"180dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginBottom=\"480dp\"\r\n        android:autofillHints=\"@string/new_email_hint\"\r\n        android:hint=\"@string/new_email_hint\"\r\n        android:inputType=\"textEmailAddress\"\r\n        android:minHeight=\"48dp\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        android:textAlignment=\"center\" />\r\n\r\n    <EditText\r\n        android:id=\"@+id/et_curr_password\"\r\n        android:layout_width=\"180dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginBottom=\"430dp\"\r\n        android:autofillHints=\"@string/new_email_hint\"\r\n        android:hint=\"@string/enter_password\"\r\n        android:inputType=\"textPassword\"\r\n        android:minHeight=\"48dp\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        android:textAlignment=\"center\"/>\r\n\r\n    <Button\r\n        android:id=\"@+id/btn_change_email\"\r\n        android:layout_width=\"180dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        android:layout_marginBottom=\"380dp\"\r\n        android:text=\"@string/change_email_button\"/>\r\n\r\n    <EditText\r\n        android:id=\"@+id/et_old_pw\"\r\n        android:layout_width=\"180dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginBottom=\"280dp\"\r\n        android:autofillHints=\"@string/old_pw_hint\"\r\n        android:hint=\"@string/old_pw_hint\"\r\n        android:inputType=\"textPassword\"\r\n        android:minHeight=\"48dp\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        android:textAlignment=\"center\" />\r\n\r\n    <EditText\r\n        android:id=\"@+id/et_new_pw\"\r\n        android:layout_width=\"180dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginBottom=\"230dp\"\r\n        android:autofillHints=\"@string/new_pw_hint\"\r\n        android:hint=\"@string/new_pw_hint\"\r\n        android:inputType=\"textPassword\"\r\n        android:minHeight=\"48dp\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        android:textAlignment=\"center\"/>\r\n\r\n    <Button\r\n        android:id=\"@+id/btn_change_pw\"\r\n        android:layout_width=\"180dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        android:layout_marginBottom=\"180dp\"\r\n        android:text=\"@string/change_pw_button\"/>\r\n\r\n    <Button\r\n        android:id=\"@+id/btn_Logout\"\r\n        android:layout_width=\"180dp\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginBottom=\"55dp\"\r\n        android:text=\"@string/logout\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\" />\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_settings.xml b/app/src/main/res/layout/fragment_settings.xml
+--- a/app/src/main/res/layout/fragment_settings.xml	(revision 326373fbe52e80514c87aa13a8931ef29291377b)
++++ b/app/src/main/res/layout/fragment_settings.xml	(date 1681937675776)
+@@ -2,94 +2,106 @@
+ <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:tools="http://schemas.android.com/tools"
++    android:id="@+id/linearLayout"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     tools:context=".SettingsFragment">
+ 
+-    <EditText
+-        android:id="@+id/et_new_email"
+-        android:layout_width="180dp"
+-        android:layout_height="wrap_content"
+-        android:layout_marginBottom="480dp"
+-        android:autofillHints="@string/new_email_hint"
+-        android:hint="@string/new_email_hint"
+-        android:inputType="textEmailAddress"
+-        android:minHeight="48dp"
+-        app:layout_constraintBottom_toBottomOf="parent"
++
++    <Button
++        android:id="@+id/btn_change_pw"
++        android:layout_width="178dp"
++        android:layout_height="0dp"
++
++        android:layout_marginBottom="200dp"
++        android:text="@string/change_pw_button"
++        app:layout_constraintBottom_toTopOf="@+id/btn_Logout"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+-        android:textAlignment="center" />
++        app:layout_constraintTop_toBottomOf="@+id/et_new_pw" />
+ 
+     <EditText
+-        android:id="@+id/et_curr_password"
+-        android:layout_width="180dp"
++        android:id="@+id/et_new_pw"
++        android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:layout_marginBottom="430dp"
+-        android:autofillHints="@string/new_email_hint"
+-        android:hint="@string/enter_password"
++
++        android:layout_marginStart="3dp"
++        android:layout_marginBottom="22dp"
++        android:autofillHints="@string/new_pw_hint"
++        android:hint="@string/new_pw_hint"
+         android:inputType="textPassword"
+         android:minHeight="48dp"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        android:textAlignment="center"/>
+-
+-    <Button
+-        android:id="@+id/btn_change_email"
+-        android:layout_width="180dp"
+-        android:layout_height="wrap_content"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        android:layout_marginBottom="380dp"
+-        android:text="@string/change_email_button"/>
++        app:layout_constraintBottom_toTopOf="@+id/btn_change_pw"
++        app:layout_constraintStart_toStartOf="@+id/et_old_pw"
++        app:layout_constraintTop_toBottomOf="@+id/et_old_pw" />
+ 
+     <EditText
+         android:id="@+id/et_old_pw"
+-        android:layout_width="180dp"
++        android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:layout_marginBottom="280dp"
++
++        android:layout_marginBottom="18dp"
+         android:autofillHints="@string/old_pw_hint"
+         android:hint="@string/old_pw_hint"
+         android:inputType="textPassword"
+         android:minHeight="48dp"
+-        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintBottom_toTopOf="@+id/et_new_pw"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+-        android:textAlignment="center" />
++        app:layout_constraintTop_toBottomOf="@+id/btn_change_email" />
++
++    <Button
++        android:id="@+id/btn_change_email"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:layout_marginStart="10dp"
++        android:layout_marginBottom="20dp"
++        android:text="@string/change_email_button"
++        app:layout_constraintBottom_toTopOf="@+id/et_old_pw"
++        app:layout_constraintStart_toStartOf="@+id/et_old_pw"
++        app:layout_constraintTop_toBottomOf="@+id/et_curr_password" />
+ 
+     <EditText
+-        android:id="@+id/et_new_pw"
+-        android:layout_width="180dp"
++        android:id="@+id/et_new_email"
++        android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:layout_marginBottom="230dp"
+-        android:autofillHints="@string/new_pw_hint"
+-        android:hint="@string/new_pw_hint"
+-        android:inputType="textPassword"
++        android:layout_marginTop="43dp"
++        android:layout_marginBottom="20dp"
++        android:autofillHints="@string/new_email_hint"
++        android:hint="@string/new_email_hint"
++        android:inputType="textEmailAddress"
+         android:minHeight="48dp"
+-        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintBottom_toTopOf="@+id/et_curr_password"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+-        android:textAlignment="center"/>
++        app:layout_constraintTop_toTopOf="parent" />
+ 
+-    <Button
+-        android:id="@+id/btn_change_pw"
+-        android:layout_width="180dp"
++    <EditText
++        android:id="@+id/et_curr_password"
++        android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        android:layout_marginBottom="180dp"
+-        android:text="@string/change_pw_button"/>
++
++        android:layout_marginStart="2dp"
++        android:layout_marginBottom="21dp"
++        android:autofillHints="@string/new_email_hint"
++        android:hint="@string/enter_password"
++        android:inputType="textPassword"
++        android:minHeight="48dp"
++        app:layout_constraintBottom_toTopOf="@+id/btn_change_email"
++        app:layout_constraintStart_toStartOf="@+id/et_new_email"
++        app:layout_constraintTop_toBottomOf="@+id/et_new_email" />
+ 
+     <Button
+         android:id="@+id/btn_Logout"
+-        android:layout_width="180dp"
++        android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:layout_marginBottom="55dp"
++
++        android:layout_marginBottom="51dp"
+         android:text="@string/logout"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent" />
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/btn_change_pw" />
++
+ 
+ </androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/fragment_profile.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:gravity=\"center\"\r\n    android:orientation=\"vertical\"\r\n    android:padding=\"15dp\"\r\n    tools:context=\".ProfileFragment\">\r\n\r\n    <ImageView\r\n        android:id=\"@+id/profile_icon\"\r\n        android:contentDescription=\"@string/profile_image\"\r\n        android:layout_width=\"100dp\"\r\n        android:layout_height=\"100dp\"\r\n        android:src=\"@drawable/ic_account\" />\r\n\r\n    <Space\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"15dp\" />\r\n\r\n    <TextView\r\n        android:id=\"@+id/profile_username\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"@string/profile_username\"\r\n        android:textSize=\"25sp\" />\r\n\r\n    <Space\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"15dp\" />\r\n\r\n    <TableLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\">\r\n\r\n        <TableRow\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\">\r\n\r\n            <Space\r\n                android:layout_width=\"50dp\"\r\n                android:layout_height=\"match_parent\" />\r\n\r\n            <TextView\r\n                android:id=\"@+id/profile_follower_num\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:text=\"@string/hash\"\r\n                android:textAlignment=\"center\"\r\n                android:textSize=\"20sp\" />\r\n\r\n            <Space\r\n                android:layout_width=\"110dp\"\r\n                android:layout_height=\"match_parent\" />\r\n\r\n            <TextView\r\n                android:id=\"@+id/profile_following_num\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:text=\"@string/hash\"\r\n                android:textAlignment=\"center\"\r\n                android:textSize=\"20sp\" />\r\n\r\n            <Space\r\n                android:layout_width=\"50dp\"\r\n                android:layout_height=\"match_parent\" />\r\n        </TableRow>\r\n\r\n        <TableRow\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\">\r\n\r\n            <Space\r\n                android:layout_width=\"50dp\"\r\n                android:layout_height=\"match_parent\" />\r\n\r\n            <TextView\r\n                android:id=\"@+id/profile_followers_label\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:text=\"@string/profile_followers_label\"\r\n                android:textSize=\"20sp\" />\r\n\r\n            <Space\r\n                android:layout_width=\"110dp\"\r\n                android:layout_height=\"match_parent\" />\r\n\r\n            <TextView\r\n                android:id=\"@+id/profile_following_label\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:text=\"@string/profile_following_label\"\r\n                android:textSize=\"20sp\" />\r\n\r\n            <Space\r\n                android:layout_width=\"50dp\"\r\n                android:layout_height=\"match_parent\" />\r\n        </TableRow>\r\n\r\n    </TableLayout>\r\n\r\n    <Space\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"15dp\" />\r\n\r\n    <View\r\n        android:id=\"@+id/divider\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"3dp\"\r\n        android:background=\"?android:attr/listDivider\" />\r\n\r\n    <TableLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\">\r\n\r\n        <TableRow\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\" />\r\n\r\n        <TableRow\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\" />\r\n\r\n        <TableRow\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\" />\r\n\r\n        <TableRow\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\" />\r\n    </TableLayout>\r\n\r\n</LinearLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_profile.xml b/app/src/main/res/layout/fragment_profile.xml
+--- a/app/src/main/res/layout/fragment_profile.xml	(revision 326373fbe52e80514c87aa13a8931ef29291377b)
++++ b/app/src/main/res/layout/fragment_profile.xml	(date 1681938588503)
+@@ -13,7 +13,7 @@
+         android:contentDescription="@string/profile_image"
+         android:layout_width="100dp"
+         android:layout_height="100dp"
+-        android:src="@drawable/ic_account" />
++        android:src="@mipmap/profile" />
+ 
+     <Space
+         android:layout_width="match_parent"
+@@ -21,114 +21,52 @@
+ 
+     <TextView
+         android:id="@+id/profile_username"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
++
++        android:layout_width="249dp"
++        android:layout_height="79dp"
+         android:text="@string/profile_username"
+-        android:textSize="25sp" />
++        android:textColor="@color/orange"
++        android:textSize="40sp" />
+ 
+-    <Space
++    <TextView
++        android:id="@+id/textView4"
+         android:layout_width="match_parent"
+-        android:layout_height="15dp" />
++        android:layout_height="wrap_content"
++        android:text="First Name:"
++        android:textColor="#E65100" />
+ 
+-    <TableLayout
++    <TextView
++        android:id="@+id/profile_Fname"
+         android:layout_width="match_parent"
+-        android:layout_height="wrap_content">
++        android:layout_height="49dp"
++        android:textSize="34sp" />
+ 
+-        <TableRow
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent">
+-
+-            <Space
+-                android:layout_width="50dp"
+-                android:layout_height="match_parent" />
+-
+-            <TextView
+-                android:id="@+id/profile_follower_num"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:text="@string/hash"
+-                android:textAlignment="center"
+-                android:textSize="20sp" />
+-
+-            <Space
+-                android:layout_width="110dp"
+-                android:layout_height="match_parent" />
++    <TextView
++        android:id="@+id/textView5"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:text="Second Name:"
++        android:textColor="#E65100" />
+ 
+-            <TextView
+-                android:id="@+id/profile_following_num"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:text="@string/hash"
+-                android:textAlignment="center"
+-                android:textSize="20sp" />
+-
+-            <Space
+-                android:layout_width="50dp"
+-                android:layout_height="match_parent" />
+-        </TableRow>
+-
+-        <TableRow
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent">
+-
+-            <Space
+-                android:layout_width="50dp"
+-                android:layout_height="match_parent" />
++    <TextView
++        android:id="@+id/profile_Sname"
++        android:layout_width="match_parent"
++        android:layout_height="49dp"
++        android:text="TextView"
++        android:textSize="34sp" />
+ 
+-            <TextView
+-                android:id="@+id/profile_followers_label"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:text="@string/profile_followers_label"
+-                android:textSize="20sp" />
+-
+-            <Space
+-                android:layout_width="110dp"
+-                android:layout_height="match_parent" />
++    <TextView
++        android:id="@+id/textView6"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:text="Email:"
++        android:textColor="#E65100" />
+ 
+-            <TextView
+-                android:id="@+id/profile_following_label"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:text="@string/profile_following_label"
+-                android:textSize="20sp" />
+-
+-            <Space
+-                android:layout_width="50dp"
+-                android:layout_height="match_parent" />
+-        </TableRow>
+-
+-    </TableLayout>
+-
+-    <Space
++    <TextView
++        android:id="@+id/profile_email"
+         android:layout_width="match_parent"
+-        android:layout_height="15dp" />
+-
+-    <View
+-        android:id="@+id/divider"
+-        android:layout_width="match_parent"
+-        android:layout_height="3dp"
+-        android:background="?android:attr/listDivider" />
+-
+-    <TableLayout
+-        android:layout_width="match_parent"
+-        android:layout_height="match_parent">
+-
+-        <TableRow
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent" />
+-
+-        <TableRow
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent" />
+-
+-        <TableRow
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent" />
+-
+-        <TableRow
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent" />
+-    </TableLayout>
++        android:layout_height="49dp"
++        android:text="TextView"
++        android:textSize="34sp" />
+ 
+ </LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/post_row.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:layout_marginTop=\"16dp\"\r\n    android:background=\"@drawable/border\">\r\n\r\n    <ImageView\r\n        android:id=\"@+id/post_image\"\r\n        android:contentDescription=\"@string/post_image_description\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"400dp\" />\r\n\r\n    <TextView\r\n        android:id=\"@+id/post_caption\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_below=\"@+id/post_image\"\r\n        android:gravity=\"center_horizontal\"\r\n        android:textSize=\"24sp\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/location_button\"\r\n        android:text=\"@string/location\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_below=\"@+id/post_caption\"\r\n        android:layout_centerHorizontal=\"true\" />\r\n\r\n</RelativeLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/post_row.xml b/app/src/main/res/layout/post_row.xml
+--- a/app/src/main/res/layout/post_row.xml	(revision 326373fbe52e80514c87aa13a8931ef29291377b)
++++ b/app/src/main/res/layout/post_row.xml	(date 1681922815541)
+@@ -3,7 +3,7 @@
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:layout_marginTop="16dp"
+-    android:background="@drawable/border">
++    android:background="@drawable/rounded_border">
+ 
+     <ImageView
+         android:id="@+id/post_image"
+@@ -15,6 +15,7 @@
+         android:id="@+id/post_caption"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
++        android:background="@color/blue"
+         android:layout_below="@+id/post_image"
+         android:gravity="center_horizontal"
+         android:textSize="24sp" />
+Index: app/src/main/java/com/example/cs4084project/DashboardActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.cs4084project;\r\n\r\nimport android.os.Bundle;\r\nimport android.view.MenuItem;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.ActionBar;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.fragment.app.FragmentTransaction;\r\n\r\nimport com.google.android.material.bottomnavigation.BottomNavigationView;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\n\r\npublic class DashboardActivity extends AppCompatActivity {\r\n\r\n    FirebaseAuth auth;\r\n    FirebaseUser user;\r\n    String myuid;\r\n    ActionBar actionBar;\r\n    BottomNavigationView navigationView;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_dashboard);\r\n        // using auth to try create instance of session to use to log someone out, not currently working out\r\n        auth = FirebaseAuth.getInstance();\r\n        actionBar = getSupportActionBar();\r\n        actionBar.setTitle(\"Profile Activity\");\r\n        //auth = FirebaseAuth.getInstance();\r\n\r\n        navigationView = findViewById(R.id.navigation);\r\n        navigationView.setOnItemSelectedListener(selectedListener);\r\n        actionBar.setTitle(\"Home\");\r\n\r\n        // When we open the application first\r\n        // time the fragment should be shown to the user\r\n        // in this case it is home fragment\r\n        HomeFragment fragment = new HomeFragment();\r\n        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();\r\n        fragmentTransaction.replace(R.id.content, fragment, \"\");\r\n        fragmentTransaction.commit();\r\n    }\r\n\r\n    private BottomNavigationView.OnItemSelectedListener selectedListener = new BottomNavigationView.OnItemSelectedListener() {\r\n        @Override\r\n        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {\r\n            switch (menuItem.getItemId()) {\r\n// creating the nav bar buttons and linking them to a page when clicked on\r\n                case R.id.nav_home:\r\n                    actionBar.setTitle(\"Home\");\r\n                    HomeFragment homeFragment = new HomeFragment();\r\n                    FragmentTransaction homeFragTransaction = getSupportFragmentManager().beginTransaction();\r\n                    homeFragTransaction.replace(R.id.content, homeFragment, \"\");\r\n                    homeFragTransaction.commit();\r\n                    return true;\r\n\r\n                case R.id.nav_search:\r\n                    actionBar.setTitle(\"Search\");\r\n                    SearchFragment searchFragment= new SearchFragment();\r\n                    FragmentTransaction searchFragTransaction = getSupportFragmentManager().beginTransaction();\r\n                    searchFragTransaction.replace(R.id.content, searchFragment);\r\n                    searchFragTransaction.commit();\r\n                    return true;\r\n\r\n                case R.id.nav_post:\r\n                    actionBar.setTitle(\"Create Post\");\r\n                    NewPostFragment postFragment = new NewPostFragment();\r\n                    FragmentTransaction postFragTransaction = getSupportFragmentManager().beginTransaction();\r\n                    postFragTransaction.replace(R.id.content, postFragment, \"\");\r\n                    postFragTransaction.commit();\r\n                    return true;\r\n\r\n                case R.id.nav_settings:\r\n                    actionBar.setTitle(\"Settings\");\r\n                    SettingsFragment settingsFragment = new SettingsFragment();\r\n                    FragmentTransaction settingsFragTransaction = getSupportFragmentManager().beginTransaction();\r\n                    settingsFragTransaction.replace(R.id.content, settingsFragment, \"\");\r\n                    settingsFragTransaction.commit();\r\n                    return true;\r\n\r\n                case R.id.nav_profile:\r\n                    actionBar.setTitle(\"Profile\");\r\n                    ProfileFragment profileFragment = new ProfileFragment();\r\n                    FragmentTransaction profileFragTransaction = getSupportFragmentManager().beginTransaction();\r\n                    profileFragTransaction.replace(R.id.content, profileFragment);\r\n                    profileFragTransaction.commit();\r\n                    return true;\r\n            }\r\n            return false;\r\n        }\r\n    };\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/cs4084project/DashboardActivity.java b/app/src/main/java/com/example/cs4084project/DashboardActivity.java
+--- a/app/src/main/java/com/example/cs4084project/DashboardActivity.java	(revision 326373fbe52e80514c87aa13a8931ef29291377b)
++++ b/app/src/main/java/com/example/cs4084project/DashboardActivity.java	(date 1681936479098)
+@@ -56,12 +56,12 @@
+                     homeFragTransaction.commit();
+                     return true;
+ 
+-                case R.id.nav_search:
+-                    actionBar.setTitle("Search");
+-                    SearchFragment searchFragment= new SearchFragment();
+-                    FragmentTransaction searchFragTransaction = getSupportFragmentManager().beginTransaction();
+-                    searchFragTransaction.replace(R.id.content, searchFragment);
+-                    searchFragTransaction.commit();
++                case R.id.nav_profile:
++                    actionBar.setTitle("Profile");
++                    ProfileFragment profileFragment = new ProfileFragment();
++                    FragmentTransaction profileFragTransaction = getSupportFragmentManager().beginTransaction();
++                    profileFragTransaction.replace(R.id.content, profileFragment);
++                    profileFragTransaction.commit();
+                     return true;
+ 
+                 case R.id.nav_post:
+@@ -80,12 +80,13 @@
+                     settingsFragTransaction.commit();
+                     return true;
+ 
+-                case R.id.nav_profile:
+-                    actionBar.setTitle("Profile");
+-                    ProfileFragment profileFragment = new ProfileFragment();
+-                    FragmentTransaction profileFragTransaction = getSupportFragmentManager().beginTransaction();
+-                    profileFragTransaction.replace(R.id.content, profileFragment);
+-                    profileFragTransaction.commit();
++
++                case R.id.nav_edit:
++                    actionBar.setTitle("Edit Profile");
++                    EditProfileFragment editProfileFragment = new EditProfileFragment();
++                    FragmentTransaction editFragTransaction = getSupportFragmentManager().beginTransaction();
++                    editFragTransaction.replace(R.id.content, editProfileFragment, "");
++                    editFragTransaction.commit();
+                     return true;
+             }
+             return false;
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    id 'com.android.application'\r\n    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'\r\n    id 'com.google.gms.google-services'\r\n}\r\n\r\nandroid {\r\n    namespace 'com.example.cs4084project'\r\n    compileSdk 33\r\n\r\n    defaultConfig {\r\n        applicationId \"com.example.cs4084project\"\r\n        minSdk 24\r\n        targetSdk 33\r\n        versionCode 1\r\n        versionName \"1.0\"\r\n\r\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n        }\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility JavaVersion.VERSION_1_8\r\n        targetCompatibility JavaVersion.VERSION_1_8\r\n    }\r\n    buildFeatures {\r\n        viewBinding true\r\n    }\r\n}\r\n// under NO circumstance update or change version number!!!!\r\ndependencies {\r\n\r\n\r\n    implementation 'com.google.code.gson:gson:2.10.1'\r\n    //'com.google.android.material:material:1.2.0'\r\n    implementation 'com.google.android.material:material:1.2.0'\r\n    //'androidx.appcompat:appcompat:1.6.1'\r\n    implementation 'androidx.appcompat:appcompat:1.6.1'\r\n    //'com.google.android.material:material:1.8.0'\r\n    implementation 'com.google.android.material:material:1.8.0'\r\n    //'androidx.annotation:annotation:1.3.0'\r\n    implementation 'androidx.annotation:annotation:1.3.0'\r\n    //'androidx.constraintlayout:constraintlayout:2.1.4'\r\n    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'\r\n    //implementation 'androidx.constraintlayout:constraintlayout:2.1.4'\r\n    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'\r\n    // 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'\r\n    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'\r\n    // 'com.google.android.gms:play-services-maps:18.0.2'\r\n    implementation 'com.google.android.gms:play-services-maps:18.1.0'\r\n\r\n    implementation 'com.google.android.gms:play-services-location:21.0.1'\r\n    //implementation platform('com.google.firebase:firebase-bom:31.4.0')\r\n    implementation platform('com.google.firebase:firebase-bom:31.4.0')\r\n    // 'com.google.firebase:firebase-auth'\r\n    implementation 'com.google.firebase:firebase-auth'\r\n    //'androidx.navigation:navigation-fragment:2.5.3'\r\n    implementation 'androidx.navigation:navigation-fragment:2.5.3'\r\n    //'androidx.navigation:navigation-ui:2.5.3'\r\n    implementation 'androidx.navigation:navigation-ui:2.5.3'\r\n    implementation 'com.google.android.gms:play-services-tasks:18.0.2'\r\n    implementation 'com.google.firebase:firebase-storage:20.1.0'\r\n    //'testImplementation 'junit:junit:4.13.2'\r\n    testImplementation 'junit:junit:4.13.2'\r\n    //'androidx.test.ext:junit:1.1.5'\r\n    androidTestImplementation 'androidx.test.ext:junit:1.1.5'\r\n    //'androidx.test.espresso:espresso-core:3.5.1'\r\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle b/app/build.gradle
+--- a/app/build.gradle	(revision 326373fbe52e80514c87aa13a8931ef29291377b)
++++ b/app/build.gradle	(date 1681929101588)
+@@ -65,6 +65,8 @@
+     implementation 'androidx.navigation:navigation-ui:2.5.3'
+     implementation 'com.google.android.gms:play-services-tasks:18.0.2'
+     implementation 'com.google.firebase:firebase-storage:20.1.0'
++    implementation 'com.google.firebase:firebase-database'
++    implementation platform('com.google.firebase:firebase-bom:31.5.0')
+     //'testImplementation 'junit:junit:4.13.2'
+     testImplementation 'junit:junit:4.13.2'
+     //'androidx.test.ext:junit:1.1.5'
+Index: app/src/main/res/menu/menu_nav.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<menu xmlns:android=\"http://schemas.android.com/apk/res/android\">\r\n\r\n    <!--This is where each button in the nav bar is edited-->\r\n    <!--changing icon in drawable folder changes icon on nav bar-->\r\n    <!--changing title changes the actual text that appears on the button-->\r\n    <item\r\n        android:id=\"@+id/nav_home\"\r\n        android:icon=\"@drawable/ic_home\"\r\n        android:title=\"Home\" />\r\n    <item\r\n        android:id=\"@+id/nav_search\"\r\n        android:icon=\"@drawable/ic_post\"\r\n        android:title=\"Search\" />\r\n\r\n    <item\r\n        android:id=\"@+id/nav_post\"\r\n        android:icon=\"@drawable/ic_post\"\r\n        android:title=\"Post\"/>\r\n\r\n    <item\r\n        android:id=\"@+id/nav_settings\"\r\n        android:icon=\"@drawable/baseline_logout_24\"\r\n        android:title=\"Settings\" />\r\n    <item\r\n        android:id=\"@+id/nav_profile\"\r\n        android:icon=\"@drawable/ic_account\"\r\n        android:title=\"Profile\" />\r\n\r\n</menu>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/menu/menu_nav.xml b/app/src/main/res/menu/menu_nav.xml
+--- a/app/src/main/res/menu/menu_nav.xml	(revision 326373fbe52e80514c87aa13a8931ef29291377b)
++++ b/app/src/main/res/menu/menu_nav.xml	(date 1681936473344)
+@@ -9,9 +9,9 @@
+         android:icon="@drawable/ic_home"
+         android:title="Home" />
+     <item
+-        android:id="@+id/nav_search"
++        android:id="@+id/nav_profile"
+         android:icon="@drawable/ic_post"
+-        android:title="Search" />
++        android:title="Profile" />
+ 
+     <item
+         android:id="@+id/nav_post"
+@@ -23,8 +23,9 @@
+         android:icon="@drawable/baseline_logout_24"
+         android:title="Settings" />
+     <item
+-        android:id="@+id/nav_profile"
++        android:id="@+id/nav_edit"
+         android:icon="@drawable/ic_account"
+-        android:title="Profile" />
++        android:title="Edit Profile" />
++
+ 
+ </menu>
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\">\r\n\r\n    <uses-permission android:name=\"android.permission.INTERNET\" />\r\n    <uses-permission android:name=\"android.permission.CAMERA\" />\r\n    <uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />\r\n    <uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:dataExtractionRules=\"@xml/data_extraction_rules\"\r\n        android:fullBackupContent=\"@xml/backup_rules\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/Theme.Material3.Dark\"\r\n        tools:targetApi=\"31\">\r\n\r\n\r\n\r\n        <activity\r\n            android:name=\".Register\"\r\n            android:exported=\"false\"\r\n            android:theme=\"@style/Theme.Material3.Dark.NoActionBar\" />\r\n        <activity\r\n            android:name=\".Login\"\r\n            android:exported=\"true\"\r\n            android:theme=\"@style/Theme.Material3.Dark.NoActionBar\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n        <!--\r\n             TODO: Before you run your application, you need a Google Maps API key.\r\n\r\n             To get one, follow the directions here:\r\n\r\n                https://developers.google.com/maps/documentation/android-sdk/get-api-key\r\n\r\n             Once you have your API key (it starts with \"AIza\"), define a new property in your\r\n             project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the\r\n             \"YOUR_API_KEY\" string in this file with \"${MAPS_API_KEY}\".\r\n        -->\r\n        <meta-data\r\n            android:name=\"com.google.android.geo.API_KEY\"\r\n            android:value=\"${MAPS_API_KEY}\" />\r\n\r\n        <meta-data\r\n            android:name=\"com.google.android.gms.version\"\r\n            android:value=\"@integer/google_play_services_version\" />\r\n\r\n        <activity\r\n            android:name=\".DashboardActivity\"\r\n            android:exported=\"true\"\r\n            android:label=\"CS4084-Project\" />\r\n    </application>\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision 326373fbe52e80514c87aa13a8931ef29291377b)
++++ b/app/src/main/AndroidManifest.xml	(date 1681934500512)
+@@ -3,6 +3,7 @@
+     xmlns:tools="http://schemas.android.com/tools">
+ 
+     <uses-permission android:name="android.permission.INTERNET" />
++    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+     <uses-permission android:name="android.permission.CAMERA" />
+     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+Index: app/google-services.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n  \"project_info\": {\r\n    \"project_number\": \"667022146704\",\r\n    \"project_id\": \"cs4084-e9153\",\r\n    \"storage_bucket\": \"cs4084-e9153.appspot.com\"\r\n  },\r\n  \"client\": [\r\n    {\r\n      \"client_info\": {\r\n        \"mobilesdk_app_id\": \"1:667022146704:android:813877bbdef8f23415ac15\",\r\n        \"android_client_info\": {\r\n          \"package_name\": \"com.example.cs4084project\"\r\n        }\r\n      },\r\n      \"oauth_client\": [\r\n        {\r\n          \"client_id\": \"667022146704-es074tvd8bgq4rp7vji9b5ak5lr4p1tb.apps.googleusercontent.com\",\r\n          \"client_type\": 3\r\n        }\r\n      ],\r\n      \"api_key\": [\r\n        {\r\n          \"current_key\": \"AIzaSyDMfCe8CbAViZhXyZWrkyANDEns6N47E-g\"\r\n        }\r\n      ],\r\n      \"services\": {\r\n        \"appinvite_service\": {\r\n          \"other_platform_oauth_client\": [\r\n            {\r\n              \"client_id\": \"667022146704-es074tvd8bgq4rp7vji9b5ak5lr4p1tb.apps.googleusercontent.com\",\r\n              \"client_type\": 3\r\n            }\r\n          ]\r\n        }\r\n      }\r\n    }\r\n  ],\r\n  \"configuration_version\": \"1\"\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/google-services.json b/app/google-services.json
+--- a/app/google-services.json	(revision 326373fbe52e80514c87aa13a8931ef29291377b)
++++ b/app/google-services.json	(date 1681757289601)
+@@ -1,6 +1,7 @@
+ {
+   "project_info": {
+     "project_number": "667022146704",
++    "firebase_url": "https://cs4084-e9153-default-rtdb.europe-west1.firebasedatabase.app",
+     "project_id": "cs4084-e9153",
+     "storage_bucket": "cs4084-e9153.appspot.com"
+   },
+Index: app/src/main/res/values/colors.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<resources>\r\n    <color name=\"purple_200\">#FFBB86FC</color>\r\n    <color name=\"purple_500\">#FF6200EE</color>\r\n    <color name=\"purple_700\">#FF3700B3</color>\r\n    <color name=\"teal_200\">#FF03DAC5</color>\r\n    <color name=\"teal_700\">#FF018786</color>\r\n    <color name=\"black\">#FF000000</color>\r\n    <color name=\"white\">#FFFFFFFF</color>\r\n</resources>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/colors.xml b/app/src/main/res/values/colors.xml
+--- a/app/src/main/res/values/colors.xml	(revision 326373fbe52e80514c87aa13a8931ef29291377b)
++++ b/app/src/main/res/values/colors.xml	(date 1681923582230)
+@@ -7,4 +7,7 @@
+     <color name="teal_700">#FF018786</color>
+     <color name="black">#FF000000</color>
+     <color name="white">#FFFFFFFF</color>
++    <color name="green">#026317</color>
++    <color name="blue">#0C29E1</color>
++    <color name="orange">#E65100</color>
+ </resources>
+\ No newline at end of file
+Index: app/src/main/java/com/example/cs4084project/ProfileFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.cs4084project;\r\n\r\nimport android.os.Bundle;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.TextView;\r\n\r\nimport com.google.firebase.auth.FirebaseAuth;\r\n\r\n\r\npublic class ProfileFragment extends Fragment {\r\n\r\n\r\n    public ProfileFragment() {\r\n        // Required empty public constructor\r\n    }\r\n\r\n    @Override\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        // Inflate the layout for this fragment\r\n        return inflater.inflate(R.layout.fragment_profile, container, false);\r\n    }\r\n\r\n    @Override\r\n    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {\r\n        super.onViewCreated(view, savedInstanceState);\r\n        String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();\r\n        TextView usernameText = view.findViewById(R.id.profile_username);\r\n        usernameText.setText(userEmail);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/cs4084project/ProfileFragment.java b/app/src/main/java/com/example/cs4084project/ProfileFragment.java
+--- a/app/src/main/java/com/example/cs4084project/ProfileFragment.java	(revision 326373fbe52e80514c87aa13a8931ef29291377b)
++++ b/app/src/main/java/com/example/cs4084project/ProfileFragment.java	(date 1681934965754)
+@@ -6,16 +6,26 @@
+ import androidx.annotation.Nullable;
+ import androidx.fragment.app.Fragment;
+ 
++import android.text.TextUtils;
++import android.util.Log;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+ import android.widget.TextView;
+ 
+ import com.google.firebase.auth.FirebaseAuth;
++import com.google.firebase.auth.FirebaseUser;
++import com.google.firebase.database.DataSnapshot;
++import com.google.firebase.database.DatabaseError;
++import com.google.firebase.database.DatabaseReference;
++import com.google.firebase.database.FirebaseDatabase;
++import com.google.firebase.database.ValueEventListener;
+ 
+ 
+ public class ProfileFragment extends Fragment {
+ 
++    private DatabaseReference mDatabase;
++    private TextView mfNameTextView, msNameTextView, mEmailTextView, mNickname;
+ 
+     public ProfileFragment() {
+         // Required empty public constructor
+@@ -31,8 +41,68 @@
+     @Override
+     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+         super.onViewCreated(view, savedInstanceState);
+-        String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+-        TextView usernameText = view.findViewById(R.id.profile_username);
+-        usernameText.setText(userEmail);
++
++        // Get references to the UI elements
++        mfNameTextView = view.findViewById(R.id.profile_Fname);
++        msNameTextView = view.findViewById(R.id.profile_Sname);
++        mEmailTextView = view.findViewById(R.id.profile_email);
++        mNickname = view.findViewById(R.id.profile_username);
++
++        // Get a reference to the Realtime Database
++        mDatabase = FirebaseDatabase.getInstance().getReference();
++
++        // Get a reference to the current user
++        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
++        if (currentUser != null) {
++            String uid = currentUser.getUid();
++
++            // Get a reference to the user's data in the Realtime Database
++            DatabaseReference userRef = mDatabase.child("users").child(uid);
++
++            // Attach a ValueEventListener to update the UI with the user's data
++            userRef.addValueEventListener(new ValueEventListener() {
++                @Override
++                public void onDataChange(@NonNull DataSnapshot snapshot) {
++                    // Retrieve the user's data from the database
++                    User user = snapshot.getValue(User.class);
++//                    if (user != null) {
++//                        if (!TextUtils.isEmpty(user.getfirstName())) {
++//                            mFNameTextView.setText(user.getfirstName());
++//                        }
++//                        if (!TextUtils.isEmpty(user.getsecondName())) {
++//                            mSNameTextView.setText(user.getsecondName());
++//                        }
++//                        if (!TextUtils.isEmpty(user.getEmail())) {
++//                            mEmailTextView.setText(user.getEmail());
++//                        }
++//                        if (!TextUtils.isEmpty(user.getNickname())) {
++//                            mNickname.setText(user.getNickname());
++//                        }
++//                    }
++
++                    // Update the UI with the user's data
++                    assert user != null;
++                    mfNameTextView.setText(user.getfirstName());
++                    msNameTextView.setText(user.getsecondName());
++                    mEmailTextView.setText(user.getEmail());
++                    mNickname.setText(user.getNickname());
++                }
++
++                @Override
++                public void onCancelled(@NonNull DatabaseError error) {
++                    Log.e("ProfileFragment", "Error retrieving user data from Realtime Database: " + error.getMessage());
++                }
++            });
++        } else {
++            Log.e("ProfileFragment", "Current user is null.");
++        }
+     }
+-}
+\ No newline at end of file
++}
++
++//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
++//        super.onViewCreated(view, savedInstanceState);
++//        String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
++//        TextView usernameText = view.findViewById(R.id.profile_username);
++//        usernameText.setText(userEmail);
++//    }
++//}
+\ No newline at end of file
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><resources>\r\n    <string name=\"app_name\">CS4084 Project</string>\r\n    <!-- Strings related to login -->\r\n    <string name=\"prompt_email\">Email</string>\r\n    <string name=\"prompt_password\">Password</string>\r\n    <string name=\"action_sign_in\">Sign in or register</string>\r\n    <string name=\"action_sign_in_short\">Sign in</string>\r\n    <string name=\"welcome\">\"Welcome!\"</string>\r\n    <string name=\"invalid_username\">Not a valid username</string>\r\n    <string name=\"invalid_password\">Password must be >5 characters</string>\r\n    <string name=\"login_failed\">\"Login failed\"</string>\r\n    <string name=\"login\">Login</string>\r\n    <string name=\"email\">Email</string>\r\n    <string name=\"password\">Password</string>\r\n    <string name=\"register\">Register</string>\r\n    <string name=\"click_to_login\">Click To Login</string>\r\n    <string name=\"click_to_register\">Click To Register</string>\r\n    <string name=\"location\">Location</string>\r\n    <string name=\"post_image_description\">Post Image</string>\r\n    <string name=\"search_fragment\">Search Fragment</string>\r\n    <string name=\"profile_image\">Profile Image</string>\r\n    <string name=\"hash\">#</string>\r\n    <string name=\"caption_hint\">Tap To Enter Caption…</string>\r\n    <string name=\"gallery_button\">Gallery</string>\r\n    <string name=\"camera_button\">Camera</string>\r\n    <string name=\"tag_location\">Tag Your Location</string>\r\n    <string name=\"upload_button\">Upload</string>\r\n    <string name=\"change_pw_button\">Change Password</string>\r\n    <string name=\"new_pw_hint\">Enter New Password</string>\r\n    <string name=\"old_pw_hint\">Enter Old Password</string>\r\n    <string name=\"change_email_button\">Change Email</string>\r\n    <string name=\"new_email_hint\">Enter New Email</string>\r\n    <string name=\"enter_password\">Enter Password</string>\r\n\r\n\r\n    <!-- Strings related to profile page -->\r\n    <string name=\"profile_username\">\\@username</string>\r\n    <string name=\"profile_followers_label\">Followers</string>\r\n    <string name=\"profile_following_label\">Following</string>\r\n\r\n    <string name=\"image_description\">Post Image</string>\r\n\r\n    <!-- TODO: Remove or change this placeholder text -->\r\n    <string name=\"hello_blank_fragment\">Hello blank fragment</string>\r\n    <string name=\"logout\">Logout</string>\r\n    <string name=\"reset_password\">Reset Password</string>\r\n    <string name=\"name\">Name</string>\r\n    <string name=\"confirmpassword\">Confirm password</string>\r\n\r\n\r\n</resources>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+--- a/app/src/main/res/values/strings.xml	(revision 326373fbe52e80514c87aa13a8931ef29291377b)
++++ b/app/src/main/res/values/strings.xml	(date 1681929289461)
+@@ -46,6 +46,11 @@
+     <string name="reset_password">Reset Password</string>
+     <string name="name">Name</string>
+     <string name="confirmpassword">Confirm password</string>
++    <string name="enter_first_name">Enter First Name</string>
++    <string name="enter_second_name">Enter Second Name</string>
++    <string name="enter_nickname">Enter User Name</string>
++    <string name="enter_email">Enter Email</string>
++    <string name="send_data">send Data</string>
+ 
+ 
+ </resources>
+\ No newline at end of file
