@@ -53,12 +53,16 @@ public class SettingsFragment extends Fragment {
         buttonChangeEmail.setOnClickListener(view12 -> {
             String password = passwordET.getText().toString().trim();
             String newEmail = newEmailET.getText().toString().trim();
+            passwordET.setText(null);
+            newEmailET.setText(null);
             changeEmail(password, newEmail);
         });
 
         buttonChangePassword.setOnClickListener(view1 -> {
             String oldPassword = oldPasswordET.getText().toString().trim();
             String newPassword = newPasswordET.getText().toString().trim();
+            oldPasswordET.setText(null);
+            newPasswordET.setText(null);
             changePassword(oldPassword, newPassword);
         });
 
