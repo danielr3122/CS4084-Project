@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="16dp"
-    android:background="@drawable/border">
+    android:background="@drawable/rounded_border">
 
     <ImageView
         android:id="@+id/post_image"
@@ -15,6 +15,7 @@
         android:id="@+id/post_caption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/blue"
         android:layout_below="@+id/post_image"
         android:gravity="center_horizontal"
         android:textSize="24sp" />
