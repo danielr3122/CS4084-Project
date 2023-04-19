@@ -37,8 +37,8 @@ public class SettingsFragment extends Fragment {
         Button buttonLogout = (Button) view.findViewById(R.id.btn_Logout);
         Button buttonChangeEmail = view.findViewById(R.id.btn_change_email);
         Button buttonChangePassword = view.findViewById(R.id.btn_change_pw);
-        EditText oldEmailET = view.findViewById(R.id.et_old_email);
         EditText newEmailET = view.findViewById(R.id.et_new_email);
+        EditText passwordET = view.findViewById(R.id.et_curr_password);
         EditText oldPasswordET = view.findViewById(R.id.et_old_pw);
         EditText newPasswordET = view.findViewById(R.id.et_new_pw);
 
@@ -50,6 +50,12 @@ public class SettingsFragment extends Fragment {
             requireActivity().finish();
         });
 
+        buttonChangeEmail.setOnClickListener(view12 -> {
+            String password = passwordET.getText().toString().trim();
+            String newEmail = newEmailET.getText().toString().trim();
+            changeEmail(password, newEmail);
+        });
+
         buttonChangePassword.setOnClickListener(view1 -> {
             String oldPassword = oldPasswordET.getText().toString().trim();
             String newPassword = newPasswordET.getText().toString().trim();
@@ -59,27 +65,42 @@ public class SettingsFragment extends Fragment {
         return view;
     }
 
+    // Updates user's email if the user enters the correct old email
+    private void changeEmail(String password, String newEmail){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String email = user.getEmail();
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+        user.reauthenticate(credential).addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                user.updateEmail(newEmail).addOnCompleteListener(task1 -> {
+                    if(!task1.isSuccessful()){
+                        Toast.makeText(getContext(), "Oops, some thing went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Successfully Changed Email", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(getContext(), "Failure, Incorrect Password", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Updates user's pw if the user enters the correct old pw
     private void changePassword(String oldPassword, String newPassword){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String email = user.getEmail();
         AuthCredential credential = EmailAuthProvider.getCredential(email, oldPassword);
-        user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    user.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(!task.isSuccessful()){
-                                Toast.makeText(getContext(), "Oops, some thing went wrong. Please try again.", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getContext(), "Successfully Changed Password", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                } else {
-                    Toast.makeText(getContext(), "Failure, Incorrect Old Password", Toast.LENGTH_SHORT).show();
-                }
+        user.reauthenticate(credential).addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                user.updatePassword(newPassword).addOnCompleteListener(task1 -> {
+                    if(!task1.isSuccessful()){
+                        Toast.makeText(getContext(), "Oops, some thing went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Successfully Changed Password", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(getContext(), "Failure, Incorrect Old Password", Toast.LENGTH_SHORT).show();
             }
         });
     }
