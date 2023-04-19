@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +9,6 @@
 
     <ImageView
         android:id="@+id/postImage"
-        android:contentDescription="@string/post_image_description"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_weight="1"
@@ -19,11 +19,10 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:ems="10"
-        android:hint="@string/caption_hint"
+        android:hint="Tap To Enter Caption..."
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        android:textSize="24sp"
-        android:autofillHints="@string/caption_hint" />
+        android:textSize="24sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +36,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="@string/gallery_button"
+            android:text="Gallery"
             android:textSize="24sp" />
 
         <Button
@@ -46,31 +45,19 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="@string/camera_button"
+            android:text="Camera"
             android:textSize="24sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@drawable/small_border"
-        android:orientation="horizontal">
-
-        <CheckBox
-            android:id="@+id/location_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            tools:ignore="TouchTargetSizeCheck" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="10dp"
-            android:layout_gravity="center_vertical"
-            android:textSize="35sp"
-            android:text="@string/tag_location" />
-    </LinearLayout>
+    <Switch
+        android:id="@+id/locationSwitch"
+        android:layout_width="353dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_weight="1"
+        android:text="Tag Current Location"
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/uploadPost"
@@ -78,7 +65,7 @@
         android:layout_height="20dp"
         android:layout_margin="10dp"
         android:layout_weight="1"
-        android:text="@string/upload_button"
+        android:text="Upload"
         android:textSize="24sp" />
 
 </LinearLayout>
