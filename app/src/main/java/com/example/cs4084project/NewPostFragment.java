@@ -29,6 +29,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 
@@ -47,7 +48,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-
 public class NewPostFragment extends Fragment {
 
     private FirebaseStorage firebaseStorage;
@@ -65,15 +65,13 @@ public class NewPostFragment extends Fragment {
     private CheckBox locationCheckBox;
     private MutableLiveData<Boolean> locationReceived = new MutableLiveData<>();
 
+    private boolean postCreated;
+
     Geocoder geocoder;
 
     public NewPostFragment() {
         // Required empty public constructor
     }
-
-
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +106,7 @@ public class NewPostFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
+        postCreated = false;
         imageView = view.findViewById(R.id.postImage);
         Button galleryBtn = view.findViewById(R.id.gallery);
         Button cameraBtn = view.findViewById(R.id.camera);
@@ -136,14 +135,21 @@ public class NewPostFragment extends Fragment {
         uploadBtn.setOnClickListener(v -> {
             if (imageBitmap == null){
                 Toast.makeText(getContext(), "No Image Selected", Toast.LENGTH_LONG).show();
-            }else {
+            } else {
                 if(locationCheckBox.isChecked()){
-                    Log.d("DAN", "Should display location");
                     locationReceived.setValue(false);
-                    fetchLastlocation();
-                    locationReceived.observe(getViewLifecycleOwner(), aBoolean -> uploadPicture());
+                    fetchLastLocation();
+                    locationReceived.observe(getViewLifecycleOwner(), aBoolean -> {
+                        if(!postCreated && aBoolean){
+                            uploadPicture();
+                            postCreated = true;
+                        }
+                    });
                 } else {
-                    uploadPicture();
+                    if(!postCreated){
+                        uploadPicture();
+                        postCreated = true;
+                    }
                 }
             }
         });
@@ -183,7 +189,7 @@ public class NewPostFragment extends Fragment {
         }
     }
 
-    private void fetchLastlocation() {
+    private void fetchLastLocation() {
         if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
             locationReceived.setValue(true);
@@ -212,7 +218,7 @@ public class NewPostFragment extends Fragment {
 
             if (requestCode == 200){
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    fetchLastlocation();
+                    fetchLastLocation();
                 }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -220,7 +226,6 @@ public class NewPostFragment extends Fragment {
 
 
     private void uploadPicture() {
-
         String caption;
         if (captionTxt.getText() != null) {
             caption = captionTxt.getText().toString();
@@ -254,6 +259,10 @@ public class NewPostFragment extends Fragment {
                     Toast.makeText(getContext(), "Failed to Upload!", Toast.LENGTH_LONG).show();
                     pd.dismiss();
                 });
+
+        imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_post));
+        captionTxt.setText(null);
+        locationCheckBox.setChecked(false);
     }
 }
 
