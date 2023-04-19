@@ -37,7 +37,6 @@ public class Login extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
             startActivity(intent);
             finish();
-
         }
     }
 
@@ -100,7 +99,6 @@ public class Login extends AppCompatActivity {
 
                                     Toast.makeText(Login.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
-
                                 }
                             }
                         });

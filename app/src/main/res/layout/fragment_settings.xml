@@ -6,15 +6,90 @@
     android:layout_height="match_parent"
     tools:context=".SettingsFragment">
 
-    <Button
-        android:id="@+id/btn_Logout"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/et_new_email"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="67dp"
-        android:text="@string/logout"
+        android:layout_marginBottom="480dp"
+        android:autofillHints="@string/new_email_hint"
+        android:hint="@string/new_email_hint"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/et_curr_password"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="430dp"
+        android:autofillHints="@string/new_email_hint"
+        android:hint="@string/enter_password"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textAlignment="center"/>
+
+    <Button
+        android:id="@+id/btn_change_email"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="380dp"
+        android:text="@string/change_email_button"/>
+
+    <EditText
+        android:id="@+id/et_old_pw"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="280dp"
+        android:autofillHints="@string/old_pw_hint"
+        android:hint="@string/old_pw_hint"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/et_new_pw"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="230dp"
+        android:autofillHints="@string/new_pw_hint"
+        android:hint="@string/new_pw_hint"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textAlignment="center"/>
+
+    <Button
+        android:id="@+id/btn_change_pw"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="180dp"
+        android:text="@string/change_pw_button"/>
+
+    <Button
+        android:id="@+id/btn_Logout"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="55dp"
+        android:text="@string/logout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
