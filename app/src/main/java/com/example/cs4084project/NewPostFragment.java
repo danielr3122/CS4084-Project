@@ -12,11 +12,12 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,19 +30,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -53,27 +50,20 @@ import java.util.UUID;
 
 public class NewPostFragment extends Fragment {
 
-
-
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
 
     private ImageView imageView;
-    private Uri imageUri;
     private Bitmap imageBitmap;
-    private Button galleryBtn;
-    private Button cameraBtn;
 
     private TextView captionTxt;
-    private String caption;
 
     private Gson gson;
 
-    private Button uploadBtn;
-
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private Button locationBtn;
+    private CheckBox locationCheckBox;
+    private MutableLiveData<Boolean> locationReceived = new MutableLiveData<>();
 
     Geocoder geocoder;
 
@@ -88,7 +78,6 @@ public class NewPostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
@@ -107,8 +96,6 @@ public class NewPostFragment extends Fragment {
             };
             requestPermissions(permission, 100);
         }
-
-
     }
 
     @Override
@@ -121,65 +108,53 @@ public class NewPostFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
-        imageView = getView().findViewById(R.id.postImage);
-        galleryBtn =  getView().findViewById(R.id.gallery);
-        cameraBtn =  getView().findViewById(R.id.camera);
+        imageView = view.findViewById(R.id.postImage);
+        Button galleryBtn = view.findViewById(R.id.gallery);
+        Button cameraBtn = view.findViewById(R.id.camera);
 
-        captionTxt = (TextView) getView().findViewById(R.id.Caption);
+        captionTxt = getView().findViewById(R.id.Caption);
 
-        locationBtn = getView().findViewById(R.id.location);
+        locationCheckBox = view.findViewById(R.id.location_checkbox);
 
-        uploadBtn =  getView().findViewById(R.id.uploadPost);
+        Button uploadBtn = view.findViewById(R.id.uploadPost);
 
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
 
-        galleryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent galleryIntent =
-                        new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                galleryActivityResultLauncher.launch(galleryIntent);
-            }
+        galleryBtn.setOnClickListener(v -> {
+            Intent galleryIntent =
+                    new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            galleryActivityResultLauncher.launch(galleryIntent);
         });
 
-        cameraBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        cameraBtn.setOnClickListener(v -> {
 
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, 110);
-            }
-
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, 110);
         });
 
-        locationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fetchLastlocation();
-            }
-        });
-
-
-        uploadBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                if (imageBitmap == null){
-                    Toast.makeText(getContext(), "No Image Selected", Toast.LENGTH_LONG).show();
-                }else {
+        uploadBtn.setOnClickListener(v -> {
+            if (imageBitmap == null){
+                Toast.makeText(getContext(), "No Image Selected", Toast.LENGTH_LONG).show();
+            }else {
+                if(locationCheckBox.isChecked()){
+                    Log.d("DAN", "Should display location");
+                    locationReceived.setValue(false);
+                    fetchLastlocation();
+                    locationReceived.observe(getViewLifecycleOwner(), aBoolean -> uploadPicture());
+                } else {
                     uploadPicture();
                 }
             }
         });
     }
 
-
     ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result){
                     if(result.getResultCode() == DashboardActivity.RESULT_OK) {
-                        imageUri = result.getData().getData();
+                        Uri imageUri = result.getData().getData();
 
                         try {
                             InputStream inputStream = getActivity().
@@ -189,7 +164,7 @@ public class NewPostFragment extends Fragment {
 
                             imageView.setImageBitmap(imageBitmap);
 
-                        }catch (FileNotFoundException e){
+                        } catch (FileNotFoundException e){
 
                         }
                     }
@@ -204,37 +179,32 @@ public class NewPostFragment extends Fragment {
             if(resultCode == DashboardActivity.RESULT_OK) {
                     imageBitmap = (Bitmap) data.getExtras().get("data");
                     imageView.setImageBitmap(imageBitmap);
-
             }
         }
-
     }
 
     private void fetchLastlocation() {
-
         if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+            locationReceived.setValue(true);
             return;
         }
 
         Task task = fusedLocationProviderClient.getLastLocation();
-        task.addOnSuccessListener(new OnSuccessListener() {
-            @Override
-            public void onSuccess(Object o) {
-                Location location = (Location) o;
-                if (location != null){
-                    currentLocation = location;
-                }
+        task.addOnSuccessListener(o -> {
+            Location location = (Location) o;
+            if (location != null){
+                currentLocation = location;
+            }
 
-                try {
-                    List<Address> listAddress = geocoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
-                    Toast.makeText(getContext(), "Address used: " +listAddress.get(0).getAddressLine(0)+", "+ listAddress.get(0).getCountryName(), Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+            try {
+                List<Address> listAddress = geocoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
+                Toast.makeText(getContext(), "Address used: " +listAddress.get(0).getAddressLine(0)+", "+ listAddress.get(0).getCountryName(), Toast.LENGTH_LONG).show();
+                locationReceived.setValue(true);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
-
     }
 
     @Override
@@ -251,6 +221,7 @@ public class NewPostFragment extends Fragment {
 
     private void uploadPicture() {
 
+        String caption;
         if (captionTxt.getText() != null) {
             caption = captionTxt.getText().toString();
         } else caption = "";
@@ -275,19 +246,13 @@ public class NewPostFragment extends Fragment {
 
         UploadTask uploadTask = fileRef.putBytes(data);
 
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getContext(), "Uploaded Successfully!", Toast.LENGTH_LONG).show();
-                        pd.dismiss();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Failed to Upload!", Toast.LENGTH_LONG).show();
-                        pd.dismiss();
-                    }
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            Toast.makeText(getContext(), "Uploaded Successfully!", Toast.LENGTH_LONG).show();
+            pd.dismiss();
+        })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Failed to Upload!", Toast.LENGTH_LONG).show();
+                    pd.dismiss();
                 });
     }
 }

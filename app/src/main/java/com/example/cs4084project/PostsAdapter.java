@@ -75,7 +75,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         locationBtn.setOnClickListener(view -> {
             progressDialog = new ProgressDialog(view.getContext());
             progressDialog.setIndeterminate(true);
-            progressDialog.setMessage("Loading Location");
+            progressDialog.setMessage("Loading Location...");
             progressDialog.show();
             showMapsFragment(view, post.getLatitude(), post.getLongitude());
         });
