@@ -31,12 +31,9 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -57,17 +54,11 @@ public class NewPostFragment extends Fragment {
     private StorageReference storageReference;
 
     private ImageView imageView;
-    private Uri imageUri;
     private Bitmap imageBitmap;
-    private Button galleryBtn;
-    private Button cameraBtn;
 
     private TextView captionTxt;
-    private String caption;
 
     private Gson gson;
-
-    private Button uploadBtn;
 
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -118,14 +109,14 @@ public class NewPostFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
         imageView = view.findViewById(R.id.postImage);
-        galleryBtn =  view.findViewById(R.id.gallery);
-        cameraBtn =  view.findViewById(R.id.camera);
+        Button galleryBtn = view.findViewById(R.id.gallery);
+        Button cameraBtn = view.findViewById(R.id.camera);
 
-        captionTxt = (TextView) getView().findViewById(R.id.Caption);
+        captionTxt = getView().findViewById(R.id.Caption);
 
         locationCheckBox = view.findViewById(R.id.location_checkbox);
 
-        uploadBtn =  view.findViewById(R.id.uploadPost);
+        Button uploadBtn = view.findViewById(R.id.uploadPost);
 
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
@@ -142,20 +133,17 @@ public class NewPostFragment extends Fragment {
             startActivityForResult(cameraIntent, 110);
         });
 
-        uploadBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                if (imageBitmap == null){
-                    Toast.makeText(getContext(), "No Image Selected", Toast.LENGTH_LONG).show();
-                }else {
-                    if(locationCheckBox.isChecked()){
-                        Log.d("DAN", "Should display location");
-                        locationReceived.setValue(false);
-                        fetchLastlocation();
-                        locationReceived.observe(getViewLifecycleOwner(), aBoolean -> uploadPicture());
-                    } else {
-                        uploadPicture();
-                    }
+        uploadBtn.setOnClickListener(v -> {
+            if (imageBitmap == null){
+                Toast.makeText(getContext(), "No Image Selected", Toast.LENGTH_LONG).show();
+            }else {
+                if(locationCheckBox.isChecked()){
+                    Log.d("DAN", "Should display location");
+                    locationReceived.setValue(false);
+                    fetchLastlocation();
+                    locationReceived.observe(getViewLifecycleOwner(), aBoolean -> uploadPicture());
+                } else {
+                    uploadPicture();
                 }
             }
         });
@@ -166,7 +154,7 @@ public class NewPostFragment extends Fragment {
                 @Override
                 public void onActivityResult(ActivityResult result){
                     if(result.getResultCode() == DashboardActivity.RESULT_OK) {
-                        imageUri = result.getData().getData();
+                        Uri imageUri = result.getData().getData();
 
                         try {
                             InputStream inputStream = getActivity().
@@ -203,21 +191,18 @@ public class NewPostFragment extends Fragment {
         }
 
         Task task = fusedLocationProviderClient.getLastLocation();
-        task.addOnSuccessListener(new OnSuccessListener() {
-            @Override
-            public void onSuccess(Object o) {
-                Location location = (Location) o;
-                if (location != null){
-                    currentLocation = location;
-                }
+        task.addOnSuccessListener(o -> {
+            Location location = (Location) o;
+            if (location != null){
+                currentLocation = location;
+            }
 
-                try {
-                    List<Address> listAddress = geocoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
-                    Toast.makeText(getContext(), "Address used: " +listAddress.get(0).getAddressLine(0)+", "+ listAddress.get(0).getCountryName(), Toast.LENGTH_LONG).show();
-                    locationReceived.setValue(true);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+            try {
+                List<Address> listAddress = geocoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
+                Toast.makeText(getContext(), "Address used: " +listAddress.get(0).getAddressLine(0)+", "+ listAddress.get(0).getCountryName(), Toast.LENGTH_LONG).show();
+                locationReceived.setValue(true);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
     }
@@ -236,6 +221,7 @@ public class NewPostFragment extends Fragment {
 
     private void uploadPicture() {
 
+        String caption;
         if (captionTxt.getText() != null) {
             caption = captionTxt.getText().toString();
         } else caption = "";
@@ -260,19 +246,13 @@ public class NewPostFragment extends Fragment {
 
         UploadTask uploadTask = fileRef.putBytes(data);
 
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getContext(), "Uploaded Successfully!", Toast.LENGTH_LONG).show();
-                        pd.dismiss();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Failed to Upload!", Toast.LENGTH_LONG).show();
-                        pd.dismiss();
-                    }
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            Toast.makeText(getContext(), "Uploaded Successfully!", Toast.LENGTH_LONG).show();
+            pd.dismiss();
+        })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Failed to Upload!", Toast.LENGTH_LONG).show();
+                    pd.dismiss();
                 });
     }
 }
