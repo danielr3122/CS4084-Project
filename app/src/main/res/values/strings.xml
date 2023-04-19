@@ -25,6 +25,12 @@
     <string name="camera_button">Camera</string>
     <string name="tag_location">Tag Current Location</string>
     <string name="upload_button">Upload</string>
+    <string name="change_pw_button">Change Password</string>
+    <string name="new_pw_hint">Enter New Password</string>
+    <string name="old_pw_hint">Enter Old Password</string>
+    <string name="change_email_button">Change Email</string>
+    <string name="new_email_hint">Enter New Email</string>
+    <string name="old_email_hint">Enter Old Email</string>
 
 
     <!-- Strings related to profile page -->

@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
 import java.util.zip.Inflater;
 
 
@@ -39,26 +41,18 @@ FirebaseAuth mAuth, auth;
                 Intent intent = new Intent(getActivity(), Login.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                getActivity().finish();
+                requireActivity().finish();
+            }
+        });
+
+        Button buttonChangePassword = view.findViewById(R.id.btn_change_pw);
+        buttonChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             }
         });
 
         return view;
-            }
-
-
-
-
-
-    private void signout() {
-        FirebaseAuth.getInstance().signOut();
     }
-
-//
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_settings, container, false);
-//    }
 }
