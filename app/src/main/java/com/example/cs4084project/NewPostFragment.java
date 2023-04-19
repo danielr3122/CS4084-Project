@@ -12,11 +12,12 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -40,9 +43,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,8 +52,6 @@ import java.util.UUID;
 
 
 public class NewPostFragment extends Fragment {
-
-
 
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
@@ -73,7 +71,8 @@ public class NewPostFragment extends Fragment {
 
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private Button locationBtn;
+    private CheckBox locationCheckBox;
+    private MutableLiveData<Boolean> locationReceived = new MutableLiveData<>();
 
     Geocoder geocoder;
 
@@ -88,7 +87,6 @@ public class NewPostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
@@ -107,8 +105,6 @@ public class NewPostFragment extends Fragment {
             };
             requestPermissions(permission, 100);
         }
-
-
     }
 
     @Override
@@ -121,45 +117,30 @@ public class NewPostFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
-        imageView = getView().findViewById(R.id.postImage);
-        galleryBtn =  getView().findViewById(R.id.gallery);
-        cameraBtn =  getView().findViewById(R.id.camera);
+        imageView = view.findViewById(R.id.postImage);
+        galleryBtn =  view.findViewById(R.id.gallery);
+        cameraBtn =  view.findViewById(R.id.camera);
 
         captionTxt = (TextView) getView().findViewById(R.id.Caption);
 
-        locationBtn = getView().findViewById(R.id.location);
+        locationCheckBox = view.findViewById(R.id.location_checkbox);
 
-        uploadBtn =  getView().findViewById(R.id.uploadPost);
+        uploadBtn =  view.findViewById(R.id.uploadPost);
 
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
 
-        galleryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent galleryIntent =
-                        new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                galleryActivityResultLauncher.launch(galleryIntent);
-            }
+        galleryBtn.setOnClickListener(v -> {
+            Intent galleryIntent =
+                    new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            galleryActivityResultLauncher.launch(galleryIntent);
         });
 
-        cameraBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        cameraBtn.setOnClickListener(v -> {
 
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, 110);
-            }
-
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, 110);
         });
-
-        locationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fetchLastlocation();
-            }
-        });
-
 
         uploadBtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -167,12 +148,18 @@ public class NewPostFragment extends Fragment {
                 if (imageBitmap == null){
                     Toast.makeText(getContext(), "No Image Selected", Toast.LENGTH_LONG).show();
                 }else {
-                    uploadPicture();
+                    if(locationCheckBox.isChecked()){
+                        Log.d("DAN", "Should display location");
+                        locationReceived.setValue(false);
+                        fetchLastlocation();
+                        locationReceived.observe(getViewLifecycleOwner(), aBoolean -> uploadPicture());
+                    } else {
+                        uploadPicture();
+                    }
                 }
             }
         });
     }
-
 
     ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
@@ -189,7 +176,7 @@ public class NewPostFragment extends Fragment {
 
                             imageView.setImageBitmap(imageBitmap);
 
-                        }catch (FileNotFoundException e){
+                        } catch (FileNotFoundException e){
 
                         }
                     }
@@ -204,16 +191,14 @@ public class NewPostFragment extends Fragment {
             if(resultCode == DashboardActivity.RESULT_OK) {
                     imageBitmap = (Bitmap) data.getExtras().get("data");
                     imageView.setImageBitmap(imageBitmap);
-
             }
         }
-
     }
 
     private void fetchLastlocation() {
-
         if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+            locationReceived.setValue(true);
             return;
         }
 
@@ -229,12 +214,12 @@ public class NewPostFragment extends Fragment {
                 try {
                     List<Address> listAddress = geocoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
                     Toast.makeText(getContext(), "Address used: " +listAddress.get(0).getAddressLine(0)+", "+ listAddress.get(0).getCountryName(), Toast.LENGTH_LONG).show();
+                    locationReceived.setValue(true);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
         });
-
     }
 
     @Override

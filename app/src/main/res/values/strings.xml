@@ -23,7 +23,7 @@
     <string name="caption_hint">Tap To Enter Caption…</string>
     <string name="gallery_button">Gallery</string>
     <string name="camera_button">Camera</string>
-    <string name="tag_location">Tag Current Location</string>
+    <string name="tag_location">Tag Your Location</string>
     <string name="upload_button">Upload</string>
     <string name="change_pw_button">Change Password</string>
     <string name="new_pw_hint">Enter New Password</string>

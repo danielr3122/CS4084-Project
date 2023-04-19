@@ -50,14 +50,27 @@
             android:textSize="24sp" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/location"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_margin="10dp"
-        android:layout_weight="1"
-        android:text="@string/tag_location"
-        android:textSize="24sp" />
+        android:layout_height="60dp"
+        android:background="@drawable/small_border"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/location_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"
+            android:textSize="35sp"
+            android:text="@string/tag_location" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/uploadPost"
