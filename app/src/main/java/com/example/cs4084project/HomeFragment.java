@@ -95,12 +95,14 @@ public class HomeFragment extends Fragment {
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
         Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         String decodedCaption = jsonObject.getString("caption");
+        String userUID = jsonObject.getString("userUID");
+        String userNickname = jsonObject.getString("userNickname");
 
         if(jsonObject.getBoolean("containsLocation")){
             double decodedLongitude = jsonObject.getDouble("longitude");
             double decodedLatitude = jsonObject.getDouble("latitude");
-            return new Post(decodedBitmap, decodedCaption, decodedLongitude, decodedLatitude);
+            return new Post(decodedBitmap, decodedCaption, decodedLongitude, decodedLatitude, userUID, userNickname);
         }
-        return new Post(decodedBitmap, decodedCaption);
+        return new Post(decodedBitmap, decodedCaption, userUID, userNickname);
     }
 }

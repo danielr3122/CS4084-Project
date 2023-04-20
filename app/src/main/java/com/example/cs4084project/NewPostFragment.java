@@ -1,6 +1,7 @@
 package com.example.cs4084project;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +13,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +38,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -52,6 +61,9 @@ public class NewPostFragment extends Fragment {
 
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
+
+    private String userUID;
+    private String userNickname;
 
     private ImageView imageView;
     private Bitmap imageBitmap;
@@ -100,13 +112,14 @@ public class NewPostFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         imageView = getView().findViewById(R.id.postImage);
         Button galleryBtn = getView().findViewById(R.id.gallery);
         Button cameraBtn = getView().findViewById(R.id.camera);
 
         captionTxt = getView().findViewById(R.id.Caption);
 
+        @SuppressLint("UseSwitchCompatOrMaterialCode")
         Switch locationSwitch = getView().findViewById(R.id.locationSwitch);
         locationSwitch.setChecked(false);
 
@@ -114,6 +127,33 @@ public class NewPostFragment extends Fragment {
 
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            userUID = currentUser.getUid();
+
+            // Get a reference to the user's data in the Realtime Database
+            DatabaseReference userRef = mDatabase.child("users").child(userUID);
+            userRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    // Retrieve the user's data from the database
+                    User user = snapshot.getValue(User.class);
+
+                    assert user != null;
+                    userNickname = user.getNickname();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("ProfileFragment", "Error retrieving user data from Realtime Database: " + error.getMessage());
+                }
+            });
+        } else {
+            Log.e("ProfileFragment", "Current user is null.");
+        }
+
 
         galleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,7 +206,7 @@ public class NewPostFragment extends Fragment {
                         Uri imageUri = result.getData().getData();
 
                         try {
-                            InputStream inputStream = getActivity().
+                            InputStream inputStream = requireActivity().
                                     getApplicationContext().getContentResolver().openInputStream(imageUri);
 
                             imageBitmap = BitmapFactory.decodeStream(inputStream);
@@ -174,7 +214,7 @@ public class NewPostFragment extends Fragment {
                             imageView.setImageBitmap(imageBitmap);
 
                         }catch (FileNotFoundException e){
-
+                            Log.i("FNF","File not found exception in gallery image select");
                         }
                     }
                 }
@@ -247,10 +287,12 @@ public class NewPostFragment extends Fragment {
         Post newPost;
 
         if(currentLocation == null) {
-            newPost = new Post(imageBitmap, caption);
+            newPost = new Post(imageBitmap, caption, userUID, userNickname);
         }else{
-            newPost = new Post(imageBitmap, caption, currentLocation.getLongitude(), currentLocation.getLatitude());
+            newPost = new Post(imageBitmap, caption, currentLocation.getLongitude(), currentLocation.getLatitude(), userUID, userNickname);
         }
+
+
         String jsonNewPost = gson.toJson(newPost);
 
         byte[] data = jsonNewPost.getBytes();

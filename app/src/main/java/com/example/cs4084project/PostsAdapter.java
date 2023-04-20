@@ -25,10 +25,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         public TextView captionText;
         public ImageView imageView;
         public Button locationButton;
+        public TextView userText;
 
         public ViewHolder(View itemView){
             super(itemView);
             captionText = itemView.findViewById(R.id.post_caption);
+            userText = itemView.findViewById(R.id.post_user);
             imageView = itemView.findViewById(R.id.post_image);
             locationButton = itemView.findViewById(R.id.location_button);
         }
@@ -56,11 +58,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(PostsAdapter.ViewHolder holder, int position){
         Post post = allPosts.get(position);
-        TextView textView = holder.captionText;
+        TextView captionTextView = holder.captionText;
+        TextView userTextView = holder.userText;
         ImageView imageView = holder.imageView;
         Button locationBtn = holder.locationButton;
         imageView.setImageBitmap(post.getImage());
-        textView.setText(post.getCaption());
+        captionTextView.setText(post.getCaption());
+        userTextView.setText(post.getUserNickname());
 
         // Removes the Location Button
         // if the post doesn't have a location
