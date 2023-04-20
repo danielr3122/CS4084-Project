@@ -59,22 +59,28 @@ import java.util.UUID;
 
 public class NewPostFragment extends Fragment {
 
-    private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
 
+    //user attributes of new post
     private String userUID;
     private String userNickname;
 
+    //image attribute of new post
     private ImageView imageView;
     private Bitmap imageBitmap;
 
+    //caption of new post
     private TextView captionTxt;
 
+    //used to turn Post object into .json for upload (storage structured as sort of document-based database)
     private Gson gson;
 
+    //location attribute of new post
     private Location currentLocation;
+    //used for google play services functionality to determine location
     private FusedLocationProviderClient fusedLocationProviderClient;
 
+    //turns latitude&longitude into address
     Geocoder geocoder;
 
 
@@ -82,7 +88,9 @@ public class NewPostFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        firebaseStorage = FirebaseStorage.getInstance();
+
+        //part of firebase used for storing Post data
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
@@ -91,6 +99,8 @@ public class NewPostFragment extends Fragment {
 
         gson = new Gson();
 
+
+        //asking for camera permission
         if (ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.CAMERA) ==
                 PackageManager.PERMISSION_DENIED
         ) {
@@ -113,6 +123,7 @@ public class NewPostFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+        // setting up UI elements
         imageView = getView().findViewById(R.id.postImage);
         Button galleryBtn = getView().findViewById(R.id.gallery);
         Button cameraBtn = getView().findViewById(R.id.camera);
@@ -120,13 +131,12 @@ public class NewPostFragment extends Fragment {
         captionTxt = getView().findViewById(R.id.Caption);
 
         @SuppressLint("UseSwitchCompatOrMaterialCode")
-        Switch locationSwitch = getView().findViewById(R.id.locationSwitch);
+           Switch locationSwitch = getView().findViewById(R.id.locationSwitch);
         locationSwitch.setChecked(false);
 
         Button uploadBtn = getView().findViewById(R.id.uploadPost);
 
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference();
+        //part of firebase where user data is stored
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -134,6 +144,7 @@ public class NewPostFragment extends Fragment {
             userUID = currentUser.getUid();
 
             // Get a reference to the user's data in the Realtime Database
+            // this section of code is to get the username so it can later be displayed as part of the post
             DatabaseReference userRef = mDatabase.child("users").child(userUID);
             userRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -141,7 +152,6 @@ public class NewPostFragment extends Fragment {
                     // Retrieve the user's data from the database
                     User user = snapshot.getValue(User.class);
 
-                    assert user != null;
                     userNickname = user.getNickname();
                 }
 
@@ -174,6 +184,7 @@ public class NewPostFragment extends Fragment {
 
         });
 
+        //checks if switch turned on or off. Either grabs location or sets as null and informs user it has been turned off.
         locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -181,6 +192,7 @@ public class NewPostFragment extends Fragment {
                     fetchLastlocation();
                 }else{
                     currentLocation = null;
+                    Toast.makeText(getContext(),"Location Disabled",Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -188,16 +200,17 @@ public class NewPostFragment extends Fragment {
         uploadBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                if (imageBitmap == null){
+                if (imageBitmap == null){//user requires at least an image for a post
                     Toast.makeText(getContext(), "No Image Selected", Toast.LENGTH_LONG).show();
                 }else {
-                    uploadPicture();
+                    uploadPost();
                 }
             }
         });
     }
 
 
+    //Handles getting image from gallery. Image is converted from Uri to Bitmap
     ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -220,6 +233,7 @@ public class NewPostFragment extends Fragment {
                 }
             });
 
+    //Handles image selection from camera.
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -234,6 +248,7 @@ public class NewPostFragment extends Fragment {
 
     }
 
+    //gets user's location and provides a Toast showing the address of the location the app received
     private void fetchLastlocation() {
 
         if (ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -265,6 +280,7 @@ public class NewPostFragment extends Fragment {
 
     }
 
+    //handles location permission check when location switch is turned on and permission not previously granted
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
@@ -277,7 +293,9 @@ public class NewPostFragment extends Fragment {
     }
 
 
-    private void uploadPicture() {
+    //Uploads the post to firebase storage by creating an object of class Post and converting it to .json.
+    //Each post is assigned a random unique identifier (randomUUID)
+    private void uploadPost() {
 
         String caption;
         if (captionTxt.getText() != null) {
@@ -296,6 +314,8 @@ public class NewPostFragment extends Fragment {
         String jsonNewPost = gson.toJson(newPost);
 
         byte[] data = jsonNewPost.getBytes();
+
+        //Informing the user that the upload is taking place
         final ProgressDialog pd = new ProgressDialog(getActivity());
         pd.setTitle("Uploading Post...");
         pd.show();
