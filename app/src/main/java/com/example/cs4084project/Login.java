@@ -30,8 +30,8 @@ public class Login extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly. basically checking if a user is logged in if yes go to home page
-        // not login or reg screen, if no ( implied else) then "on start" don't give them the home page and in effect make them login
+        // Check if user is signed in non-null and update UI accordingly. basically checking if a user is logged in if yes go to home page
+        // not login or reg screen, if no implied else then "on start" don't give them the home page and  make them login
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
@@ -45,7 +45,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+       // initialize  variables to actvate the buttons
         mAuth = FirebaseAuth.getInstance();
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
@@ -70,7 +70,7 @@ public class Login extends AppCompatActivity {
                 String email, password;
                 email = String.valueOf(editTextEmail.getText());
                 password = String.valueOf(editTextPassword.getText());
-            // toast is just what function throws a message to the users screen
+            // toast is just a function that throws a message to the users screen in this case if they enter noting we complain
                 if(TextUtils.isEmpty(email)){
                     Toast.makeText(Login.this, "Enter Email", Toast.LENGTH_SHORT).show();
                     return;
@@ -79,7 +79,7 @@ public class Login extends AppCompatActivity {
                     Toast.makeText(Login.this, "Enter Password", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
+//mAuth is Firebase getting an instance of the database to perform functions in this case sign in
                 mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
                             @Override
@@ -105,12 +105,12 @@ public class Login extends AppCompatActivity {
 
             }
         });
-        //This is for password reset, it works APP has a weird name in emails to avoid junk filters (UL fit)
+        //This is for password reset, it works, APP has a weird name in emails to avoid junk filters ()
         buttonResetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String email = editTextEmail.getText().toString().trim();
-
+// an if statement to stop the use sending null and crashing the app
                 if (TextUtils.isEmpty(email)) {
                     editTextEmail.setError("Email is required.");
                     return;

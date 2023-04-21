@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class DashboardActivity extends AppCompatActivity {
-
+//initialize in variables for Firebase and for the navigation in the app
     FirebaseAuth auth;
     FirebaseUser user;
     String myuid;
@@ -24,7 +24,7 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        // using auth to try create instance of session to use to log someone out, not currently working out
+
         auth = FirebaseAuth.getInstance();
         actionBar = getSupportActionBar();
         actionBar.setTitle("Profile Activity");
@@ -34,8 +34,8 @@ public class DashboardActivity extends AppCompatActivity {
         navigationView.setOnItemSelectedListener(selectedListener);
         actionBar.setTitle("Home");
 
-        // When we open the application first
-        // time the fragment should be shown to the user
+        // When we open the application and are logged in
+        // this fragment should be shown to the user
         // in this case it is home fragment
         HomeFragment fragment = new HomeFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -47,11 +47,15 @@ public class DashboardActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             switch (menuItem.getItemId()) {
-// creating the nav bar buttons and linking them to a page when clicked on
+// creating the nav bar buttons and linking them to a page when clicked on, in the res folder and sub folder menu is where we change the
+// the displayed names for the nav bar but here is where we call and create the fragments for each button on the nave abr.
                 case R.id.nav_home:
                     actionBar.setTitle("Home");
+                    // here we are creating a new instance of class home fragment
                     HomeFragment homeFragment = new HomeFragment();
+                    // now we call a frame manger to and begin the fragment we can add replace, remove or hide the fragment
                     FragmentTransaction homeFragTransaction = getSupportFragmentManager().beginTransaction();
+                    // In our case when a peron click the home button we are replacing the content with the home fragment class in the UI
                     homeFragTransaction.replace(R.id.content, homeFragment, "");
                     homeFragTransaction.commit();
                     return true;

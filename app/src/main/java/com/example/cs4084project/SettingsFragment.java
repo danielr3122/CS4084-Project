@@ -34,7 +34,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-
+// setting buttons and variables for edittext so that we can us ethe data ebtered by the user
         Button buttonLogout = (Button) view.findViewById(R.id.btn_Logout);
         Button buttonChangeEmail = view.findViewById(R.id.btn_change_email);
         Button buttonChangePassword = view.findViewById(R.id.btn_change_pw);
@@ -42,7 +42,8 @@ public class SettingsFragment extends Fragment {
         EditText passwordET = view.findViewById(R.id.et_curr_password);
         EditText oldPasswordET = view.findViewById(R.id.et_old_pw);
         EditText newPasswordET = view.findViewById(R.id.et_new_pw);
-
+// The on click listener so that when the button is clicked we sign the user out by grabing the firebase instance and using the sing out function
+        // So the next time they open the app it will loadd to the login in screen not the home screen
         buttonLogout.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(getActivity(), Login.class);
@@ -50,7 +51,7 @@ public class SettingsFragment extends Fragment {
             startActivity(intent);
             requireActivity().finish();
         });
-
+// The on click listener so that when the button is clicked we collect the data and manipulate it below for the email change
         buttonChangeEmail.setOnClickListener(view12 -> {
             String password = passwordET.getText().toString().trim();
             String newEmail = newEmailET.getText().toString().trim();
@@ -58,7 +59,7 @@ public class SettingsFragment extends Fragment {
             newEmailET.setText(null);
             changeEmail(password, newEmail);
         });
-
+// The on click listener so that when the button is clicked we collect the data and manipulate it below for the password change
         buttonChangePassword.setOnClickListener(view1 -> {
             String oldPassword = oldPasswordET.getText().toString().trim();
             String newPassword = newPasswordET.getText().toString().trim();
@@ -74,6 +75,7 @@ public class SettingsFragment extends Fragment {
     private void changeEmail(String password, String newEmail){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String email = user.getEmail();
+        // This iof statemt is checking that the user has input information and throwing them  toast if they try give us null
         if(TextUtils.isEmpty(password) || TextUtils.isEmpty(newEmail)){
             Toast.makeText(getContext(), "Please both a password and new email", Toast.LENGTH_SHORT).show();
             return;
@@ -98,6 +100,7 @@ public class SettingsFragment extends Fragment {
     private void changePassword(String oldPassword, String newPassword){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String email = user.getEmail();
+        // This iof statemt is checking that the user has input information and throwing them  toast if they try give us null
         if(TextUtils.isEmpty(oldPassword) || TextUtils.isEmpty(newPassword)){
             Toast.makeText(getContext(), "Password filed cannot be empty", Toast.LENGTH_SHORT).show();
             return;

@@ -70,7 +70,8 @@ public class Register extends AppCompatActivity {
         buttonReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // progress bar has been hidden as it can fool people into thinking something is loading
+                // progress bar has been hidden as it can fool people into thinking something is loading, The progress bar is and will remain in the code
+                //it will just remain turned off because as discovered it fool people into thinking the page is loading due to it being a piking circle
                 progressBar.setVisibility(View.GONE);
                 String name, email, password;
                 email = String.valueOf(editTextEmail.getText());
@@ -85,14 +86,18 @@ public class Register extends AppCompatActivity {
                     Toast.makeText(Register.this, "Enter Password", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                // From here down we are checking if the password entered meets the critera we set out
                 if(TextUtils.isEmpty(confirmPassword)){
                     Toast.makeText(Register.this, "Confirm Password", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 if(password.length() < 6){
                     Toast.makeText(Register.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                // For this check we send the password to the method created below to do do the checking to see if it is valid and meets the conditions in place in the method
                 if(!isValidPassword(password)){
                     Toast.makeText(Register.this, "Password must contain at least one uppercase letter, one lowercase letter, and one digit", Toast.LENGTH_SHORT).show();
                     return;
