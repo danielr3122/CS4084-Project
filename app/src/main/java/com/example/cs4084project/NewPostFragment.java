@@ -11,6 +11,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -152,6 +153,7 @@ public class NewPostFragment extends Fragment {
                     // Retrieve the user's data from the database
                     User user = snapshot.getValue(User.class);
 
+                    assert user != null;
                     userNickname = user.getNickname();
                 }
 
@@ -192,7 +194,7 @@ public class NewPostFragment extends Fragment {
                     fetchLastlocation();
                 }else{
                     currentLocation = null;
-                    Toast.makeText(getContext(),"Location Disabled",Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(),"Location Disabled",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -295,52 +297,57 @@ public class NewPostFragment extends Fragment {
 
     //Uploads the post to firebase storage by creating an object of class Post and converting it to .json.
     //Each post is assigned a random unique identifier (randomUUID)
+    @SuppressLint("StaticFieldLeak")
     private void uploadPost() {
+        final String caption = captionTxt.getText() != null ? captionTxt.getText().toString() : "";
 
-        String caption;
-        if (captionTxt.getText() != null) {
-            caption = captionTxt.getText().toString();
-        } else caption = "";
-
-        Post newPost;
-
-        if(currentLocation == null) {
+        final Post newPost;
+        if (currentLocation == null) {
             newPost = new Post(imageBitmap, caption, userUID, userNickname);
-        }else{
+        } else {
             newPost = new Post(imageBitmap, caption, currentLocation.getLongitude(), currentLocation.getLatitude(), userUID, userNickname);
         }
 
+        final String jsonNewPost = gson.toJson(newPost);
+        final byte[] data = jsonNewPost.getBytes();
 
-        String jsonNewPost = gson.toJson(newPost);
-
-        byte[] data = jsonNewPost.getBytes();
-
-        //Informing the user that the upload is taking place
+        // Informing the user that the upload is taking place
         final ProgressDialog pd = new ProgressDialog(getActivity());
         pd.setTitle("Uploading Post...");
         pd.show();
 
         final String randomKey = UUID.randomUUID().toString();
-        StorageReference fileRef = storageReference.child("Posts/" + randomKey + ".json");
+        final StorageReference fileRef = storageReference.child("Posts/" + randomKey + ".json");
 
+        //running upload on different thread to aid performance
+        new AsyncTask<Void, Void, Boolean>() {
+            protected Boolean doInBackground(Void... voids) {
+                try {
+                    fileRef.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(getContext(), "Uploaded Successfully!", Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getContext(), "Failed to Upload!", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    return true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
 
-        UploadTask uploadTask = fileRef.putBytes(data);
-
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getContext(), "Uploaded Successfully!", Toast.LENGTH_LONG).show();
-                        pd.dismiss();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Failed to Upload!", Toast.LENGTH_LONG).show();
-                        pd.dismiss();
-                    }
-                });
-
-
+            @Override
+            protected void onPostExecute(Boolean success) {
+                pd.dismiss();
+                if (!success) {
+                    Toast.makeText(getContext(), "Failed to Upload!", Toast.LENGTH_LONG).show();
+                }
+            }
+        }.execute();
     }
 }
