@@ -2,105 +2,94 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SettingsFragment">
 
-
-    <EditText
-        android:id="@+id/et_new_pw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_marginStart="4dp"
-        android:layout_marginBottom="12dp"
-        android:autofillHints="@string/new_pw_hint"
-        android:hint="@string/new_pw_hint"
-        android:inputType="textPassword"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_change_pw"
-        app:layout_constraintStart_toStartOf="@+id/btn_change_pw"
-        app:layout_constraintTop_toBottomOf="@+id/et_old_pw" />
-
-    <EditText
-        android:id="@+id/et_old_pw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_marginBottom="9dp"
-        android:autofillHints="@string/old_pw_hint"
-        android:hint="@string/old_pw_hint"
-        android:inputType="textPassword"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/et_new_pw"
-        app:layout_constraintStart_toStartOf="@+id/et_new_pw"
-        app:layout_constraintTop_toBottomOf="@+id/btn_change_email" />
-
-    <Button
-        android:id="@+id/btn_change_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
-        android:layout_marginBottom="22dp"
-        android:text="@string/change_email_button"
-        app:layout_constraintBottom_toTopOf="@+id/et_old_pw"
-        app:layout_constraintStart_toStartOf="@+id/et_old_pw"
-        app:layout_constraintTop_toBottomOf="@+id/et_curr_password" />
-
     <EditText
         android:id="@+id/et_new_email"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="3dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginBottom="410dp"
         android:autofillHints="@string/new_email_hint"
         android:hint="@string/new_email_hint"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/et_curr_password"
-        app:layout_constraintEnd_toEndOf="@+id/et_curr_password"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textAlignment="center" />
 
     <EditText
         android:id="@+id/et_curr_password"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
-
-        android:layout_marginStart="1dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginBottom="360dp"
         android:autofillHints="@string/new_email_hint"
         android:hint="@string/enter_password"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_change_email"
-        app:layout_constraintStart_toStartOf="@+id/btn_change_email"
-        app:layout_constraintTop_toBottomOf="@+id/et_new_email" />
-
-    <Button
-        android:id="@+id/btn_change_pw"
-        android:layout_width="176dp"
-        android:layout_height="0dp"
-
-        android:layout_marginBottom="197dp"
-        android:text="@string/change_pw_button"
-        app:layout_constraintBottom_toTopOf="@+id/btn_Logout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_new_pw" />
-
-    <Button
-        android:id="@+id/btn_Logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_marginBottom="100dp"
-        android:text="@string/logout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_change_pw" />
+        android:textAlignment="center"/>
 
+    <Button
+        android:id="@+id/btn_change_email"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="310dp"
+        android:text="@string/change_email_button"/>
+
+    <EditText
+        android:id="@+id/et_old_pw"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="225dp"
+        android:autofillHints="@string/old_pw_hint"
+        android:hint="@string/old_pw_hint"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/et_new_pw"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="175dp"
+        android:autofillHints="@string/new_pw_hint"
+        android:hint="@string/new_pw_hint"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textAlignment="center"/>
+
+    <Button
+        android:id="@+id/btn_change_pw"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="125dp"
+        android:text="@string/change_pw_button"/>
+
+    <Button
+        android:id="@+id/btn_Logout"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:text="@string/logout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
