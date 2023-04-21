@@ -7,27 +7,28 @@
 
     <TextView
         android:id="@+id/post_user"
-        android:layout_width="match_parent"
+        android:layout_width="386dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:background="@color/blue"
+        android:layout_marginTop="5dp"
+        android:background="@color/grey"
         android:gravity="center_horizontal"
         android:textSize="24sp" />
 
     <ImageView
         android:id="@+id/post_image"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginTop="32dp"
+        android:layout_height="370dp"
+        android:layout_marginTop="45dp"
         android:contentDescription="@string/post_image_description" />
 
     <Button
         android:id="@+id/location_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="153dp"
+        android:layout_height="78dp"
         android:layout_below="@+id/post_caption"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="-2dp"
         android:text="@string/location" />
 
     <TextView
@@ -36,8 +37,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/post_image"
         android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="0dp"
-        android:background="@color/blue"
+        android:layout_marginRight="10dp"
+        android:background="@color/grey"
         android:gravity="center_horizontal"
         android:textSize="24sp" />
 
