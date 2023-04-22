@@ -25,7 +25,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
-
+ //initialize  variables for recyler view arrays and integers
     private RecyclerView rvPosts;
     private byte[] postData;
     private ArrayList<Post> allPosts = new ArrayList<>();

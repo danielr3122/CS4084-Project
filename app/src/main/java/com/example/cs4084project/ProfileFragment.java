@@ -23,7 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 public class ProfileFragment extends Fragment {
-
+//initialize  variables for the textView used to display userdata in the profie and to get the datasbse refrence to update teh users information
     private DatabaseReference mDatabase;
     private TextView mfNameTextView, msNameTextView, mEmailTextView, mNickname;
 
@@ -63,8 +63,11 @@ public class ProfileFragment extends Fragment {
             userRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    // Retrieve the user's data from the database
+                    // Retrieve the user's data from the database we get  a snapshot of the data base when it is called and extract the data from that
+                    // each time the paqe is refreshed we grab a new snap shot, one advantage of the real time database
                     User user = snapshot.getValue(User.class);
+                    // The commented out code has been left in so that I dont make the same mistake in other parts
+                    // the code below is the proper way to do it or the best way I found to do it
 //                    if (user != null) {
 //                        if (!TextUtils.isEmpty(user.getfirstName())) {
 //                            mFNameTextView.setText(user.getfirstName());
@@ -99,6 +102,7 @@ public class ProfileFragment extends Fragment {
     }
 }
 
+//  This is old code purely left in for my benefit  it can be ignored by anyone editing this program
 //    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 //        super.onViewCreated(view, savedInstanceState);
 //        String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();

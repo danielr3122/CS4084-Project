@@ -18,7 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class EditProfileFragment extends Fragment {
-
+//    initializing variables for firebase  and for edit text so that we can edit text input by the user
     private DatabaseReference mDatabase;
     private EditText editText1, editText2, editText3, editText4;
     private FirebaseUser firebaseUser;
@@ -63,8 +63,12 @@ public class EditProfileFragment extends Fragment {
 
         // Create a new User object and write it to the database
         User user = new User(firstName, secondName, email, nickname);
+        // Here we are setting the identifier to how the data is stored, in this case I am grabbing the UID from authenticator and using that
+        // so for the child of realtime database root/ users we are getting the UID and using that as the way to identify a user and link them to the
         mDatabase.child("users").child(user.getUID()).setValue(user);
     }
+
+    // this method is how we are creating the user object in the data base, we are passing in the fist name and other information from the send data method
 
     public void writeNewUser() {
 
